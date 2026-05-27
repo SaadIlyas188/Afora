@@ -206,18 +206,18 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-      <h1 className="text-2xl md:text-4xl font-bold font-heading mb-8">Checkout</h1>
+    <div className="min-h-screen max-w-[1400px] mx-auto px-6 md:px-12 py-8 md:py-12 pb-20 md:pb-12">
+      <h1 className="text-2xl md:text-4xl font-heading font-light tracking-wide mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Form */}
         <div className="lg:col-span-2 space-y-8">
           <AnimatedSection>
             {/* Contact Information */}
-            <div className="glass-card rounded-xl p-6">
+            <div className="border border-gold-200/40 p-6">
               <div className="flex items-center gap-2 mb-4">
-                <MapPin size={18} className="text-gold-400" />
-                <h2 className="text-lg font-semibold">Contact & Shipping</h2>
+                <MapPin size={16} strokeWidth={1.5} className="text-muted" />
+                <h2 className="text-sm font-heading font-medium tracking-wide">Contact & Shipping</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input label="First Name *" value={form.first_name} onChange={(e) => handleChange('first_name', e.target.value)} error={errors.first_name} placeholder="Sidra" />
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
                   <select
                     value={form.city}
                     onChange={(e) => handleChange('city', e.target.value)}
-                    className="w-full rounded-lg border border-gold-200 bg-white px-4 py-2.5 text-sm focus:border-gold-300 focus:outline-none focus:ring-2 focus:ring-gold-200/50"
+                    className="w-full border border-gold-200/40 bg-transparent px-4 py-2.5 text-sm font-body focus:border-foreground focus:outline-none"
                   >
                     {PAKISTANI_CITIES.map((city) => (
                       <option key={city} value={city}>{city}</option>
@@ -249,14 +249,14 @@ export default function CheckoutPage() {
 
           {/* Payment Method */}
           <AnimatedSection delay={0.1}>
-            <div className="glass-card rounded-xl p-6">
+            <div className="border border-gold-200/40 p-6">
               <div className="flex items-center gap-2 mb-4">
-                <CreditCard size={18} className="text-gold-400" />
-                <h2 className="text-lg font-semibold">Payment Method</h2>
+                <CreditCard size={16} strokeWidth={1.5} className="text-muted" />
+                <h2 className="text-sm font-heading font-medium tracking-wide">Payment Method</h2>
               </div>
-              <div className="bg-gold-50/50 rounded-lg p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full gold-gradient-bg flex items-center justify-center">
-                  <Package size={18} className="text-white" />
+              <div className="border border-gold-200/40 p-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-foreground flex items-center justify-center">
+                  <Package size={16} className="text-gold-50" />
                 </div>
                 <div>
                   <p className="font-medium text-sm">Cash on Delivery</p>
@@ -269,22 +269,22 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <div>
-          <div className="glass-card rounded-xl p-6 sticky top-24">
-            <h2 className="text-lg font-semibold font-heading mb-4">Order Summary</h2>
+          <div className="border border-gold-200/40 p-6 sticky top-24">
+            <h2 className="text-sm font-heading font-medium tracking-wide mb-4">Order Summary</h2>
 
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
               {items.map((item) => (
                 <div key={item.id} className="flex justify-between items-center text-sm">
                   <div className="flex-1 min-w-0">
-                    <p className="truncate font-medium">{item.name}</p>
-                    <p className="text-xs text-muted">Qty: {item.quantity}</p>
+                    <p className="truncate font-body font-medium">{item.name}</p>
+                    <p className="text-xs text-muted font-body">Qty: {item.quantity}</p>
                   </div>
                   <p className="font-medium ml-4">{formatPrice(item.price * item.quantity)}</p>
                 </div>
               ))}
             </div>
 
-            <div className="space-y-2 text-sm border-t border-gold-100 pt-4">
+            <div className="space-y-2 text-sm border-t border-gold-200/40 pt-4">
               <div className="flex justify-between">
                 <span className="text-muted">Subtotal</span>
                 <span>{formatPrice(subtotal)}</span>
@@ -299,9 +299,9 @@ export default function CheckoutPage() {
                 <span className="text-muted">Delivery</span>
                 <span>{deliveryCharges === 0 ? 'Free' : formatPrice(deliveryCharges)}</span>
               </div>
-              <div className="flex justify-between font-bold text-base border-t border-gold-100 pt-3">
+              <div className="flex justify-between font-medium text-base border-t border-gold-200/40 pt-3">
                 <span>Total</span>
-                <span className="text-gold-600">{formatPrice(total)}</span>
+                <span className="text-foreground">{formatPrice(total)}</span>
               </div>
             </div>
 

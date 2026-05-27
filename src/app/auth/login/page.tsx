@@ -38,17 +38,22 @@ export default function LoginPage() {
         className="max-w-md w-full"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold font-heading gold-gradient-text mb-2">Welcome Back</h1>
-          <p className="text-sm text-muted">Sign in to your AFORA account</p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] font-body tracking-[0.3em] uppercase text-muted">Account</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-light text-foreground tracking-wide mb-2">Welcome Back</h1>
+          <p className="text-sm font-body text-muted font-light">Sign in to your AFORA account</p>
         </div>
 
-        <div className="glass-card rounded-2xl p-6 md:p-8">
+        <div className="border border-gold-200/40 p-6 md:p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
             <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
 
             <div className="flex justify-end">
-              <Link href="/auth/forgot-password" className="text-xs text-gold-500 hover:underline">
+              <Link href="/auth/forgot-password" className="text-xs text-muted hover:text-foreground transition-colors">
                 Forgot password?
               </Link>
             </div>
@@ -61,11 +66,11 @@ export default function LoginPage() {
           <div className="mt-6 text-center space-y-3">
             <p className="text-sm text-muted">
               Don&apos;t have an account?{' '}
-              <Link href="/auth/signup" className="text-gold-500 hover:underline font-medium">
+              <Link href="/auth/signup" className="text-foreground hover:underline font-medium">
                 Sign Up
               </Link>
             </p>
-            <Link href="/products" className="text-xs text-muted hover:text-gold-500 block">
+            <Link href="/products" className="text-xs text-muted hover:text-foreground block transition-colors">
               Continue as Guest →
             </Link>
           </div>

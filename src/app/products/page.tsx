@@ -41,29 +41,33 @@ export default function ProductsPage() {
     });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       {/* Hero */}
-      <div className="bg-gradient-to-b from-cream-100 to-cream-50 py-12 md:py-20 px-4 text-center">
+      <section className="py-20 md:py-28 text-center px-6 md:px-12">
         <AnimatedSection>
-          <p className="text-xs md:text-sm tracking-[0.3em] text-gold-400 uppercase mb-3">Our Collection</p>
-          <h1 className="text-3xl md:text-5xl font-bold font-heading gold-gradient-text mb-3">Shop All Products</h1>
-          <p className="text-sm md:text-base text-muted max-w-lg mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">Our Collection</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-light text-foreground tracking-wide mb-4">Shop</h1>
+          <p className="text-sm md:text-base font-body text-muted font-light max-w-lg mx-auto">
             Discover our expertly crafted skincare essentials for every step of your beauty ritual.
           </p>
         </AnimatedSection>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 pb-16">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
           {/* Category Tabs */}
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 w-full md:w-auto">
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 w-full md:w-auto">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-4 py-2 text-[10px] md:text-[11px] font-body font-medium tracking-[0.15em] uppercase whitespace-nowrap transition-all cursor-pointer border ${
                 activeCategory === 'all'
-                  ? 'gold-gradient-bg text-white shadow-sm'
-                  : 'bg-white border border-gold-100 text-muted hover:border-gold-200'
+                  ? 'bg-foreground text-gold-50 border-foreground'
+                  : 'bg-transparent border-gold-200/60 text-muted hover:border-foreground hover:text-foreground'
               }`}
             >
               All Products
@@ -72,10 +76,10 @@ export default function ProductsPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-4 py-2 text-[10px] md:text-[11px] font-body font-medium tracking-[0.15em] uppercase whitespace-nowrap transition-all cursor-pointer border ${
                   activeCategory === cat.id
-                    ? 'gold-gradient-bg text-white shadow-sm'
-                    : 'bg-white border border-gold-100 text-muted hover:border-gold-200'
+                    ? 'bg-foreground text-gold-50 border-foreground'
+                    : 'bg-transparent border-gold-200/60 text-muted hover:border-foreground hover:text-foreground'
                 }`}
               >
                 {cat.name}
@@ -87,7 +91,7 @@ export default function ProductsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gold-100 text-sm bg-white text-muted focus:outline-none focus:border-gold-200"
+            className="px-4 py-2.5 border border-gold-200/60 text-[11px] font-body tracking-[0.1em] uppercase bg-transparent text-muted focus:outline-none focus:border-foreground"
           >
             <option value="step_number">Step Order</option>
             <option value="price_asc">Price: Low to High</option>
@@ -105,7 +109,7 @@ export default function ProductsPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"
           >
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
@@ -116,8 +120,8 @@ export default function ProductsPage() {
         </AnimatePresence>
 
         {!loading && filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-muted">No products found in this category.</p>
+          <div className="text-center py-20">
+            <p className="text-sm font-body text-muted">No products found in this category.</p>
           </div>
         )}
       </div>

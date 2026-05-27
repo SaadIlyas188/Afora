@@ -7,7 +7,6 @@ import ProductCard from '@/components/products/ProductCard';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { ProductCardSkeleton } from '@/components/ui/Skeleton';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,21 +28,25 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 px-4 md:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <AnimatedSection className="text-center mb-12 md:mb-16">
-          <p className="text-xs md:text-sm tracking-[0.3em] text-gold-400 uppercase mb-3">
-            Our Collection
-          </p>
-          <h2 className="text-3xl md:text-5xl font-bold font-heading gold-gradient-text mb-4">
+    <section className="py-20 md:py-32 px-6 md:px-12 bg-cream-100/50">
+      <div className="max-w-[1400px] mx-auto">
+        <AnimatedSection className="text-center mb-16 md:mb-20">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">
+              Our Collection
+            </span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-light text-foreground tracking-wide mb-4">
             Featured Products
           </h2>
-          <p className="text-sm md:text-base text-muted max-w-lg mx-auto">
-            Discover our expertly formulated skincare essentials, designed to reveal your most radiant skin.
+          <p className="text-sm md:text-base font-body text-muted max-w-md mx-auto font-light">
+            Expertly formulated skincare essentials for radiant skin.
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
             : products.map((product, i) => (
@@ -51,9 +54,11 @@ export default function FeaturedProducts() {
               ))}
         </div>
 
-        <div className="text-center mt-10">
+        <div className="text-center mt-12 md:mt-16">
           <Link href="/products">
-            <Button variant="outline" size="lg">View All Products</Button>
+            <span className="btn-gold-outline inline-flex items-center justify-center px-10 py-4 rounded-none text-[11px] tracking-[0.2em] uppercase font-body font-medium">
+              View All Products
+            </span>
           </Link>
         </div>
       </div>

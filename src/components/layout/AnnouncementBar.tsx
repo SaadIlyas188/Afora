@@ -11,7 +11,7 @@ export default function AnnouncementBar() {
     supabase
       .from('site_settings')
       .select('value')
-      .eq('key', 'announcement_bar_text')
+      .eq('key', 'announcement_text')
       .single()
       .then(({ data }) => {
         if (data?.value) setText(data.value);
@@ -21,8 +21,8 @@ export default function AnnouncementBar() {
   if (!text) return null;
 
   return (
-    <div className="gold-gradient-bg text-white text-center py-2 px-4 text-xs md:text-sm font-medium tracking-wide">
-      <p>{text}</p>
+    <div className="bg-foreground text-gold-50 text-center py-2.5 px-4">
+      <p className="text-[10px] md:text-[11px] font-body font-light tracking-[0.15em] uppercase">{text}</p>
     </div>
   );
 }

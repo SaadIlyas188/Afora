@@ -2,54 +2,48 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-cream-50 via-cream-100 to-gold-50 min-h-[85vh] md:min-h-[90vh] flex items-center">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 md:w-[500px] md:h-[500px] rounded-full bg-gold-100/40 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 md:w-[500px] md:h-[500px] rounded-full bg-gold-200/30 blur-3xl" />
-        {/* Gold leaf shapes */}
-        <motion.div
-          animate={{ y: [-10, 10, -10], rotate: [0, 5, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute top-20 right-10 md:right-32 w-16 h-16 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-gold-200/20 to-gold-300/10"
-        />
-        <motion.div
-          animate={{ y: [10, -10, 10], rotate: [0, -5, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute bottom-32 left-10 md:left-32 w-12 h-12 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-gold-300/15 to-gold-200/10"
-        />
+    <section className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gold-50">
+      {/* Subtle background texture */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-0 w-[60%] h-full bg-cream-200/30" />
+        <div className="absolute bottom-0 left-0 w-px h-[40%] bg-gold-300/30 ml-[10%]" />
+        <div className="absolute top-[20%] right-[15%] w-px h-[30%] bg-gold-300/20" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full py-20 md:py-0">
-        <div className="text-center max-w-3xl mx-auto">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 w-full">
+        <div className="flex flex-col items-center text-center">
           {/* Overline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xs md:text-sm tracking-[0.3em] text-gold-400 uppercase mb-4 md:mb-6"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="flex items-center gap-4 mb-8 md:mb-10"
           >
-            Luxury Facial & Skincare System
-          </motion.p>
+            <div className="w-8 md:w-12 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body font-medium tracking-[0.3em] uppercase text-muted">
+              Luxury Skincare
+            </span>
+            <div className="w-8 md:w-12 h-px bg-gold-300" />
+          </motion.div>
 
-          {/* Logo/Title */}
+          {/* Main Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-[0.1em] gold-gradient-text font-heading mb-2"
+            transition={{ duration: 1, delay: 0.4 }}
+            className="text-[clamp(3.5rem,12vw,9rem)] font-heading font-light tracking-[0.15em] text-foreground leading-[0.9] mb-4"
           >
             AFORA
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-lg md:text-2xl italic text-gold-400 font-heading mb-6 md:mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="text-sm md:text-base font-heading font-light tracking-[0.15em] text-muted mb-10 md:mb-14"
           >
             by Sidra Shahzad
           </motion.p>
@@ -58,57 +52,61 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="text-base md:text-xl text-foreground/60 leading-relaxed mb-8 md:mb-10 max-w-xl mx-auto"
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="text-sm md:text-lg font-body font-light text-muted leading-relaxed mb-10 md:mb-14 max-w-md mx-auto"
           >
-            Experience the luxury. Reveal your radiance.
+            A 6-step facial ritual crafted for luminous, 
             <br className="hidden md:block" />
-            A 6-step facial system crafted for luminous, healthy skin.
+            healthy skin you can feel.
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ duration: 0.8, delay: 1.1 }}
+            className="flex flex-col sm:flex-row gap-4"
           >
             <Link href="/products">
-              <Button size="lg" className="w-full sm:w-auto text-base px-10">
-                Shop Collection
-              </Button>
+              <span className="btn-gold inline-flex items-center justify-center px-10 py-4 rounded-none text-[11px] tracking-[0.2em] uppercase font-body font-medium">
+                <span className="relative z-10">Shop Collection</span>
+              </span>
             </Link>
             <Link href="/bundle">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto text-base px-10">
+              <span className="btn-gold-outline inline-flex items-center justify-center px-10 py-4 rounded-none text-[11px] tracking-[0.2em] uppercase font-body font-medium">
                 The Complete Ritual
-              </Button>
+              </span>
             </Link>
           </motion.div>
 
-          {/* Features Row */}
+          {/* Minimal info strip */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1 }}
-            className="flex flex-wrap justify-center gap-6 md:gap-10 mt-12 md:mt-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
+            className="flex items-center gap-8 md:gap-12 mt-16 md:mt-24"
           >
-            {[
-              { icon: '✨', label: 'Glowing Skin' },
-              { icon: '💧', label: 'Deep Hydration' },
-              { icon: '🌿', label: 'Natural Glow' },
-              { icon: '💎', label: 'Premium Quality' },
-            ].map((item) => (
-              <div key={item.label} className="flex flex-col items-center gap-1.5">
-                <span className="text-xl md:text-2xl">{item.icon}</span>
-                <span className="text-[10px] md:text-xs text-muted uppercase tracking-wider">{item.label}</span>
+            {['6-Step System', 'Premium Formulas', 'Nationwide Delivery'].map((item, i) => (
+              <div key={item} className="flex items-center gap-3">
+                {i > 0 && <div className="w-px h-3 bg-gold-300/40" />}
+                <span className="text-[10px] md:text-[11px] font-body tracking-[0.1em] uppercase text-muted font-light">
+                  {item}
+                </span>
               </div>
             ))}
           </motion.div>
         </div>
       </div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-cream-50 to-transparent" />
+      {/* Bottom line accent */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+        <motion.div
+          initial={{ scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          transition={{ duration: 1.2, delay: 1.6 }}
+          className="w-px h-10 bg-gold-300/40 origin-top"
+        />
+      </div>
     </section>
   );
 }

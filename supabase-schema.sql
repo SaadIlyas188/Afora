@@ -533,7 +533,7 @@ INSERT INTO public.site_settings (key, value) VALUES
 ('facebook', 'https://www.facebook.com/share/1CoVCdpmpD/'),
 ('about_text', 'AFORA by Sidra Shahzad is a luxury skincare brand born from a deep passion for radiant, healthy skin. Based in Lahore, Pakistan, we believe that every woman deserves to feel confident and beautiful in her own skin. Our carefully crafted facial system combines premium ingredients with cutting-edge skincare science to deliver visible results you can see and feel.'),
 ('delivery_charges', '250'),
-('announcement_text', '✨ Free delivery on orders above Rs. 5,000 — Shop the Complete Facial System & Save Rs. 3,800!');
+('announcement_text', 'Free delivery on orders above Rs. 5,000 — Shop the Complete Facial System & Save Rs. 3,800');
 
 -- FAQs
 INSERT INTO public.faqs (question, answer, category, sort_order, is_active) VALUES

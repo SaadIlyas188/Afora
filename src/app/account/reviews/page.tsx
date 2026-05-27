@@ -39,7 +39,7 @@ export default function MyReviewsPage() {
   return (
     <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold font-heading">My Reviews</h1>
+        <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading">My Reviews</h1>
         <Link href="/account"><Button variant="ghost" size="sm">← Back</Button></Link>
       </div>
 
@@ -48,10 +48,10 @@ export default function MyReviewsPage() {
       ) : (
         <div className="space-y-4">
           {reviews.map((review, i) => (
-            <motion.div key={review.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="glass-card rounded-xl p-5">
+            <motion.div key={review.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="border border-gold-200/40 p-5">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <Link href={`/products/${(review as any).product?.slug}`} className="font-semibold hover:text-gold-500">
+                  <Link href={`/products/${(review as any).product?.slug}`} className="font-medium hover:text-foreground">
                     {(review as any).product?.name}
                   </Link>
                   <div className="flex items-center gap-2 mt-1">

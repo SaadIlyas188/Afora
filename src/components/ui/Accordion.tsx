@@ -32,18 +32,18 @@ export default function Accordion({ items, allowMultiple = false }: AccordionPro
       {items.map((item, index) => (
         <div
           key={index}
-          className="border border-gold-100 rounded-xl overflow-hidden bg-white transition-shadow hover:shadow-sm"
+          className="border-b border-gold-200/40 overflow-hidden transition-colors"
         >
           <button
             onClick={() => toggle(index)}
             className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
           >
-            <span className="font-medium text-foreground pr-4">{item.title}</span>
+            <span className="font-body font-medium text-sm text-foreground pr-4">{item.title}</span>
             <motion.div
               animate={{ rotate: openItems.includes(index) ? 180 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              <ChevronDown size={18} className="text-gold-400 flex-shrink-0" />
+              <ChevronDown size={16} strokeWidth={1.5} className="text-muted flex-shrink-0" />
             </motion.div>
           </button>
           <AnimatePresence>
@@ -54,7 +54,7 @@ export default function Accordion({ items, allowMultiple = false }: AccordionPro
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="px-5 pb-4 text-sm text-muted leading-relaxed">
+                <div className="px-5 pb-4 text-sm font-body text-muted font-light leading-relaxed">
                   {item.content}
                 </div>
               </motion.div>

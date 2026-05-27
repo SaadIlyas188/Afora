@@ -11,7 +11,7 @@ import { useCart } from '@/contexts/CartContext';
 import Button from '@/components/ui/Button';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import Accordion from '@/components/ui/Accordion';
-import { ShoppingBag, Check, Sparkles } from 'lucide-react';
+import { ShoppingBag, Check } from 'lucide-react';
 
 export default function BundlePage() {
   const [bundle, setBundle] = useState<Bundle | null>(null);
@@ -67,30 +67,29 @@ export default function BundlePage() {
   const savings = (bundle.compare_at_price || 0) - bundle.price;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-cream-100 via-cream-50 to-gold-50 py-16 md:py-24 px-4 overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-60 h-60 md:w-96 md:h-96 rounded-full bg-gold-100/30 blur-3xl" />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+      <section className="bg-gold-50 py-16 md:py-24 px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 bg-gold-100 text-gold-700 text-xs font-medium px-4 py-1.5 rounded-full mb-6">
-              <Sparkles size={14} />
-              Save {formatPrice(savings)}
+            <div className="flex flex-col items-center gap-3 mb-8">
+              <div className="w-8 h-px bg-gold-300" />
+              <p className="text-[10px] tracking-[0.3em] uppercase text-muted">Save {formatPrice(savings)}</p>
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold font-heading gold-gradient-text mb-4">
+            <h1 className="text-3xl md:text-6xl font-light tracking-wide font-heading text-foreground mb-4">
               {bundle.name}
             </h1>
-            <p className="text-sm md:text-lg text-muted max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-sm md:text-lg font-body text-muted font-light max-w-2xl mx-auto mb-8 leading-relaxed">
               {bundle.description}
             </p>
             <div className="flex items-center justify-center gap-6 mb-8">
               <div className="text-center">
-                <p className="text-xs text-muted uppercase tracking-wider mb-1">Bundle Price</p>
-                <p className="text-3xl md:text-4xl font-bold gold-gradient-text">{formatPrice(bundle.price)}</p>
+                <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1">Bundle Price</p>
+                <p className="text-3xl md:text-4xl font-light tracking-wide text-foreground">{formatPrice(bundle.price)}</p>
               </div>
               {bundle.compare_at_price && (
                 <div className="text-center">
-                  <p className="text-xs text-muted uppercase tracking-wider mb-1">Individual Total</p>
+                  <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1">Individual Total</p>
                   <p className="text-xl text-muted line-through">{formatPrice(bundle.compare_at_price)}</p>
                 </div>
               )}
@@ -104,10 +103,14 @@ export default function BundlePage() {
       </section>
 
       {/* Steps Breakdown */}
-      <section className="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24">
+      <section className="max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-24">
         <AnimatedSection className="text-center mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold font-heading mb-3">Your 6-Step Ritual</h2>
-          <p className="text-sm text-muted max-w-lg mx-auto">
+          <div className="flex flex-col items-center gap-3 mb-4">
+            <div className="w-8 h-px bg-gold-300" />
+            <p className="text-[10px] tracking-[0.3em] uppercase text-muted">The Ritual</p>
+          </div>
+          <h2 className="text-2xl md:text-4xl font-light tracking-wide font-heading mb-3">Your 6-Step Ritual</h2>
+          <p className="text-sm font-body text-muted font-light max-w-lg mx-auto">
             Each step is designed to build upon the last, creating a complete facial experience.
           </p>
         </AnimatedSection>
@@ -128,10 +131,10 @@ export default function BundlePage() {
               >
                 {/* Image */}
                 <div className="w-full md:w-2/5 relative">
-                  <div className="absolute -top-3 -left-3 z-10 w-12 h-12 rounded-full gold-gradient-bg flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold">Step {product.step_number}</span>
+                  <div className="absolute -top-3 -left-3 z-10">
+                    <span className="text-[10px] font-body tracking-[0.15em] text-muted">Step {product.step_number}</span>
                   </div>
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-cream-100 border border-gold-100/50">
+                  <div className="aspect-square overflow-hidden bg-cream-100">
                     <Image
                       src={getImageUrl(primaryImage?.image_url ?? null)}
                       alt={product.name}
@@ -145,13 +148,13 @@ export default function BundlePage() {
 
                 {/* Info */}
                 <div className="w-full md:w-3/5">
-                  <p className="text-xs text-gold-400 uppercase tracking-wider mb-1">{product.category?.name}</p>
-                  <h3 className="text-xl md:text-2xl font-bold font-heading mb-2">{product.name}</h3>
-                  <p className="text-sm text-muted leading-relaxed mb-4">{product.description}</p>
+                  <p className="text-xs text-muted uppercase tracking-wider mb-1">{product.category?.name}</p>
+                  <h3 className="text-xl md:text-2xl font-light tracking-wide font-heading mb-2">{product.name}</h3>
+                  <p className="text-sm font-body text-muted font-light leading-relaxed mb-4">{product.description}</p>
 
-                  <div className="bg-gold-50/50 rounded-lg p-3 mb-4">
+                  <div className="bg-gold-50 p-3 mb-4">
                     <p className="text-xs font-medium mb-1">How to Use:</p>
-                    <p className="text-xs text-muted">{product.how_to_use}</p>
+                    <p className="text-xs font-body text-muted font-light">{product.how_to_use}</p>
                   </div>
 
                   {product.ingredients && product.ingredients.length > 0 && (
@@ -163,7 +166,7 @@ export default function BundlePage() {
                             <div className="space-y-2">
                               {product.ingredients.sort((a, b) => a.sort_order - b.sort_order).map((ing) => (
                                 <div key={ing.id} className="flex gap-2">
-                                  <Check size={14} className="text-gold-400 flex-shrink-0 mt-0.5" />
+                                  <Check size={14} className="text-muted flex-shrink-0 mt-0.5" />
                                   <div>
                                     <span className="text-xs font-medium">{ing.ingredient_name}</span>
                                     <span className="text-xs text-muted"> — {ing.ingredient_description}</span>
@@ -178,8 +181,8 @@ export default function BundlePage() {
                   )}
 
                   <div className="flex items-center justify-between mt-4">
-                    <span className="text-lg font-semibold text-gold-500">{formatPrice(product.price)}</span>
-                    <Link href={`/products/${product.slug}`} className="text-xs text-gold-500 hover:underline">
+                    <span className="text-lg font-semibold text-foreground">{formatPrice(product.price)}</span>
+                    <Link href={`/products/${product.slug}`} className="text-xs text-foreground hover:underline">
                       View Details →
                     </Link>
                   </div>
@@ -191,18 +194,20 @@ export default function BundlePage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-gradient-to-r from-cream-200 via-cream-100 to-gold-50 py-12 md:py-16 px-4 text-center">
+      <section className="bg-gold-50 py-12 md:py-16 px-6 md:px-12 text-center">
         <AnimatedSection>
-          <h2 className="text-2xl md:text-4xl font-bold font-heading gold-gradient-text mb-4">
-            Ready to Transform Your Skin?
-          </h2>
-          <p className="text-sm text-muted mb-8 max-w-md mx-auto">
-            Get the complete 6-step system and save {formatPrice(savings)} today.
-          </p>
-          <Button onClick={handleAddBundle} size="lg" className="gap-2 text-base px-12">
-            <ShoppingBag size={18} />
-            Add Bundle to Cart — {formatPrice(bundle.price)}
-          </Button>
+          <div className="max-w-[1400px] mx-auto">
+            <h2 className="text-2xl md:text-4xl font-light tracking-wide font-heading text-foreground mb-4">
+              Ready to Transform Your Skin?
+            </h2>
+            <p className="text-sm font-body text-muted font-light mb-8 max-w-md mx-auto">
+              Get the complete 6-step system and save {formatPrice(savings)} today.
+            </p>
+            <Button onClick={handleAddBundle} size="lg" className="gap-2 text-base px-12">
+              <ShoppingBag size={18} />
+              Add Bundle to Cart — {formatPrice(bundle.price)}
+            </Button>
+          </div>
         </AnimatedSection>
       </section>
     </div>

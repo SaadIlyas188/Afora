@@ -28,8 +28,8 @@ export default function MobileNav() {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-cream-50/95 backdrop-blur-md border-t border-gold-100 pb-safe">
-      <div className="grid grid-cols-5 h-16">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-gold-50/95 backdrop-blur-xl border-t border-gold-200/40 pb-safe">
+      <div className="grid grid-cols-5 h-14">
         {tabs.map((tab) => {
           const active = isActive(tab.href);
           const Icon = tab.icon;
@@ -47,24 +47,25 @@ export default function MobileNav() {
               {active && (
                 <motion.div
                   layoutId="mobile-nav-indicator"
-                  className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gold-300 rounded-full"
+                  className="absolute -top-px left-1/2 -translate-x-1/2 w-6 h-px bg-foreground"
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
               <div className="relative">
                 <Icon
-                  size={20}
-                  className={`transition-colors ${active ? 'text-gold-500' : 'text-foreground/40'}`}
+                  size={18}
+                  strokeWidth={1.5}
+                  className={`transition-colors ${active ? 'text-foreground' : 'text-muted/50'}`}
                 />
                 {showBadge && (
-                  <span className="absolute -top-1 -right-1.5 bg-gold-300 text-white text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1.5 bg-foreground text-gold-50 text-[7px] w-3 h-3 rounded-full flex items-center justify-center font-medium">
                     {badgeCount}
                   </span>
                 )}
               </div>
               <span
-                className={`text-[10px] font-medium transition-colors ${
-                  active ? 'text-gold-500' : 'text-foreground/40'
+                className={`text-[9px] font-body font-medium tracking-[0.05em] transition-colors ${
+                  active ? 'text-foreground' : 'text-muted/50'
                 }`}
               >
                 {tab.label}

@@ -31,14 +31,19 @@ export default function ForgotPasswordPage() {
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold font-heading gold-gradient-text mb-2">Reset Password</h1>
-          <p className="text-sm text-muted">We&apos;ll send you a reset link</p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] font-body tracking-[0.3em] uppercase text-muted">Account</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-light text-foreground tracking-wide mb-2">Reset Password</h1>
+          <p className="text-sm font-body text-muted font-light">We&apos;ll send you a reset link</p>
         </div>
-        <div className="glass-card rounded-2xl p-6 md:p-8">
+        <div className="border border-gold-200/40 p-6 md:p-8">
           {sent ? (
             <div className="text-center py-4">
               <p className="text-green-600 mb-4">Check your email for the reset link!</p>
-              <Link href="/auth/login" className="text-gold-500 hover:underline text-sm">Back to Sign In</Link>
+              <Link href="/auth/login" className="text-muted hover:text-foreground text-sm transition-colors">Back to Sign In</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -47,7 +52,7 @@ export default function ForgotPasswordPage() {
             </form>
           )}
           <p className="text-sm text-muted text-center mt-6">
-            <Link href="/auth/login" className="text-gold-500 hover:underline">← Back to Sign In</Link>
+            <Link href="/auth/login" className="text-muted hover:text-foreground transition-colors">← Back to Sign In</Link>
           </p>
         </div>
       </motion.div>

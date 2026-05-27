@@ -135,7 +135,7 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12">
         <ProductDetailSkeleton />
       </div>
     );
@@ -145,8 +145,8 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-heading font-bold mb-2">Product Not Found</h2>
-          <Link href="/products" className="text-gold-500 hover:underline">
+          <h2 className="text-2xl font-heading font-light tracking-wide mb-2">Product Not Found</h2>
+          <Link href="/products" className="text-muted hover:text-foreground transition-colors">
             Back to Shop
           </Link>
         </div>
@@ -160,24 +160,24 @@ export default function ProductDetailPage() {
   const inWishlist = isInWishlist(product.id);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-4">
-        <nav className="flex items-center gap-2 text-xs md:text-sm text-muted">
-          <Link href="/" className="hover:text-gold-500 transition-colors">Home</Link>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-4">
+        <nav className="flex items-center gap-2 text-xs md:text-sm text-muted font-body font-light">
+          <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight size={14} />
-          <Link href="/products" className="hover:text-gold-500 transition-colors">Shop</Link>
+          <Link href="/products" className="hover:text-foreground transition-colors">Shop</Link>
           <ChevronRight size={14} />
           <span className="text-foreground font-medium truncate">{product.name}</span>
         </nav>
       </div>
 
       {/* Product Detail */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pb-16">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
           {/* Images */}
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-            <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream-100 mb-3">
+            <div className="relative aspect-[3/4] overflow-hidden bg-cream-200 mb-3">
               <Image
                 src={getImageUrl(images[selectedImage]?.image_url ?? null)}
                 alt={product.name}
@@ -187,8 +187,10 @@ export default function ProductDetailPage() {
                 priority
               />
               {product.step_number && (
-                <div className="absolute top-4 left-4 w-10 h-10 rounded-full gold-gradient-bg flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">Step {product.step_number}</span>
+                <div className="absolute top-4 left-4">
+                  <span className="text-[10px] font-body font-medium tracking-[0.15em] text-muted bg-gold-50/90 backdrop-blur-sm px-2 py-0.5">
+                    Step {product.step_number}
+                  </span>
                 </div>
               )}
             </div>
@@ -198,7 +200,7 @@ export default function ProductDetailPage() {
                   <button
                     key={img.id}
                     onClick={() => setSelectedImage(i)}
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                    className={`w-16 h-16 md:w-20 md:h-20 overflow-hidden border-2 transition-all cursor-pointer ${
                       i === selectedImage ? 'border-gold-300' : 'border-transparent'
                     }`}
                   >
@@ -211,35 +213,35 @@ export default function ProductDetailPage() {
 
           {/* Product Info */}
           <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            <p className="text-xs md:text-sm text-gold-400 uppercase tracking-[0.2em] mb-2">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-2">
               {product.category?.name}
             </p>
-            <h1 className="text-2xl md:text-4xl font-bold font-heading mb-3">{product.name}</h1>
+            <h1 className="text-2xl md:text-4xl font-heading font-light tracking-wide mb-3">{product.name}</h1>
 
             {reviews.length > 0 && (
               <div className="flex items-center gap-2 mb-4">
                 <StarRating rating={avgRating} size={16} />
-                <span className="text-sm text-muted">({reviews.length} reviews)</span>
+                <span className="text-sm text-muted font-body font-light">({reviews.length} reviews)</span>
               </div>
             )}
 
-            <p className="text-2xl md:text-3xl font-bold text-gold-500 mb-4">{formatPrice(product.price)}</p>
+            <p className="text-2xl md:text-3xl font-light text-foreground mb-4">{formatPrice(product.price)}</p>
 
-            <p className="text-sm md:text-base text-muted leading-relaxed mb-6">{product.description}</p>
+            <p className="font-body text-muted font-light text-sm md:text-base leading-relaxed mb-6">{product.description}</p>
 
             {/* How to Use */}
-            <div className="bg-gold-50/50 rounded-xl p-4 md:p-5 mb-6">
-              <h3 className="text-sm font-semibold mb-2">How to Use</h3>
-              <p className="text-sm text-muted">{product.how_to_use}</p>
+            <div className="border border-gold-200/40 p-4 md:p-5 mb-6">
+              <h3 className="text-sm font-heading font-light tracking-wide mb-2">How to Use</h3>
+              <p className="font-body text-muted font-light text-sm">{product.how_to_use}</p>
             </div>
 
             {product.can_use_individually && (
-              <p className="text-xs text-gold-500 mb-6 italic">★ Can be used individually</p>
+              <p className="text-xs text-muted mb-6 italic">Can be used individually</p>
             )}
 
             {/* Quantity + Add to Cart */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center border border-gold-200 rounded-lg">
+              <div className="flex items-center border border-gold-200/40">
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 hover:bg-gold-50 cursor-pointer">
                   <Minus size={16} />
                 </button>
@@ -257,18 +259,18 @@ export default function ProductDetailPage() {
               </Button>
               <button
                 onClick={() => toggleWishlist(product.id, product.name)}
-                className={`w-12 h-12 rounded-lg border flex items-center justify-center transition-all cursor-pointer ${
-                  inWishlist ? 'bg-red-50 border-red-200' : 'border-gold-200 hover:bg-gold-50'
+                className={`w-12 h-12 border flex items-center justify-center transition-all cursor-pointer ${
+                  inWishlist ? 'bg-red-50 border-red-200' : 'border-gold-200/40 hover:bg-gold-50'
                 }`}
               >
-                <Heart size={20} className={inWishlist ? 'fill-red-400 text-red-400' : 'text-gold-400'} />
+                <Heart size={20} className={inWishlist ? 'fill-red-400 text-red-400' : 'text-muted'} />
               </button>
             </div>
 
             {/* Ingredients Accordion */}
             {ingredients.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-lg font-semibold font-heading mb-3">Ingredients</h3>
+                <h3 className="text-lg font-heading font-light tracking-wide mb-3">Ingredients</h3>
                 <Accordion
                   allowMultiple
                   items={ingredients.map((ing) => ({
@@ -283,37 +285,41 @@ export default function ProductDetailPage() {
 
         {/* Reviews Section */}
         <AnimatedSection className="mt-16 md:mt-24">
-          <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">Customer Reviews</h2>
+          <div className="mb-8">
+            <div className="w-8 h-px bg-gold-300 mb-3" />
+            <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-2">Feedback</p>
+            <h2 className="text-2xl md:text-3xl font-heading font-light tracking-wide">Customer Reviews</h2>
+          </div>
 
           {reviews.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 mb-8">
               {reviews.map((review) => (
-                <div key={review.id} className="glass-card rounded-xl p-5">
+                <div key={review.id} className="border border-gold-200/40 p-5">
                   <div className="flex items-center justify-between mb-2">
                     <StarRating rating={review.rating} size={14} />
-                    <span className="text-xs text-muted">
+                    <span className="text-xs text-muted font-body font-light">
                       {new Date(review.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  {review.title && <h4 className="font-semibold text-sm mb-1">{review.title}</h4>}
-                  {review.description && <p className="text-sm text-muted">{review.description}</p>}
-                  <p className="text-xs text-gold-400 mt-2">
+                  {review.title && <h4 className="font-heading font-light tracking-wide text-sm mb-1">{review.title}</h4>}
+                  {review.description && <p className="font-body text-muted font-light text-sm">{review.description}</p>}
+                  <p className="text-xs text-muted mt-2">
                     {review.profile?.first_name || 'Customer'}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted mb-8">No reviews yet. Be the first to share your experience!</p>
+            <p className="font-body text-muted font-light mb-8">No reviews yet. Be the first to share your experience.</p>
           )}
 
           {/* Write Review */}
           {user && (
-            <div className="glass-card rounded-xl p-6 max-w-lg">
-              <h3 className="font-semibold mb-4">Write a Review</h3>
+            <div className="border border-gold-200/40 p-6 max-w-lg">
+              <h3 className="font-heading font-light tracking-wide mb-4">Write a Review</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-muted block mb-1.5">Rating</label>
+                  <label className="text-sm text-muted font-body font-light block mb-1.5">Rating</label>
                   <StarRating rating={reviewRating} interactive onChange={setReviewRating} size={24} />
                 </div>
                 <div>
@@ -322,7 +328,7 @@ export default function ProductDetailPage() {
                     placeholder="Review title (optional)"
                     value={reviewTitle}
                     onChange={(e) => setReviewTitle(e.target.value)}
-                    className="w-full rounded-lg border border-gold-200 px-4 py-2.5 text-sm focus:outline-none focus:border-gold-300"
+                    className="w-full border border-gold-200/40 px-4 py-2.5 text-sm focus:outline-none focus:border-gold-300"
                   />
                 </div>
                 <div>
@@ -331,7 +337,7 @@ export default function ProductDetailPage() {
                     value={reviewDesc}
                     onChange={(e) => setReviewDesc(e.target.value)}
                     rows={3}
-                    className="w-full rounded-lg border border-gold-200 px-4 py-2.5 text-sm focus:outline-none focus:border-gold-300 resize-none"
+                    className="w-full border border-gold-200/40 px-4 py-2.5 text-sm focus:outline-none focus:border-gold-300 resize-none"
                   />
                 </div>
                 <Button onClick={handleSubmitReview} loading={submittingReview}>
@@ -345,7 +351,11 @@ export default function ProductDetailPage() {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <AnimatedSection className="mt-16 md:mt-24">
-            <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">Complete Your Ritual</h2>
+            <div className="mb-8">
+              <div className="w-8 h-px bg-gold-300 mb-3" />
+              <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-2">Discover</p>
+              <h2 className="text-2xl md:text-3xl font-heading font-light tracking-wide">Complete Your Ritual</h2>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {relatedProducts.map((p, i) => (
                 <ProductCard key={p.id} product={p} index={i} />

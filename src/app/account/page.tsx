@@ -54,7 +54,7 @@ export default function AccountPage() {
     <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold font-heading">My Account</h1>
+          <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading">My Account</h1>
           <div className="flex items-center gap-3">
             {profile?.role === 'admin' && (
               <Link href="/admin">
@@ -70,19 +70,19 @@ export default function AccountPage() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           {menuItems.map((item) => (
-            <Link key={item.href} href={item.href} className="glass-card rounded-xl p-5 hover:shadow-md transition-shadow group">
-              <item.icon size={22} className="text-gold-400 mb-2 group-hover:text-gold-500 transition-colors" />
-              <h3 className="font-semibold text-sm mb-0.5">{item.label}</h3>
+            <Link key={item.href} href={item.href} className="border border-gold-200/40 p-5 hover:shadow-md transition-shadow group">
+              <item.icon size={22} className="text-muted mb-2 group-hover:text-foreground transition-colors" />
+              <h3 className="font-medium text-sm mb-0.5">{item.label}</h3>
               <p className="text-xs text-muted">{item.desc}</p>
             </Link>
           ))}
         </div>
 
         {/* Profile Form */}
-        <div className="glass-card rounded-xl p-6">
+        <div className="border border-gold-200/40 p-6">
           <div className="flex items-center gap-2 mb-6">
-            <User size={18} className="text-gold-400" />
-            <h2 className="text-lg font-semibold">Profile Information</h2>
+            <User size={18} className="text-muted" />
+            <h2 className="text-lg font-medium">Profile Information</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input label="First Name" value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
@@ -94,7 +94,7 @@ export default function AccountPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground/80 mb-1.5">City</label>
-              <select value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="w-full rounded-lg border border-gold-200 bg-white px-4 py-2.5 text-sm">
+              <select value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="w-full border border-gold-200/40 bg-white px-4 py-2.5 text-sm">
                 {PAKISTANI_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>

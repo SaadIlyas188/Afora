@@ -53,16 +53,16 @@ export default function AdminDashboard() {
     { icon: Clock, label: 'Pending Orders', value: stats.pendingOrders, color: 'text-yellow-500' },
     { icon: TrendingUp, label: 'Today\'s Orders', value: stats.todayOrders, color: 'text-purple-500' },
     { icon: Users, label: 'Customers', value: stats.totalUsers, color: 'text-indigo-500' },
-    { icon: Package, label: 'Products', value: stats.totalProducts, color: 'text-gold-500' },
+    { icon: Package, label: 'Products', value: stats.totalProducts, color: 'text-foreground' },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold font-heading mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-light tracking-wide font-heading mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {cards.map((card, i) => (
-          <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gold-50">
+          <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-4 md:p-5 shadow-sm border border-gold-50">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center ${card.color}`}>
                 <card.icon size={18} />
@@ -77,9 +77,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden">
+      <div className="bg-white shadow-sm border border-gold-50 overflow-hidden">
         <div className="p-4 md:p-5 border-b border-gold-50">
-          <h2 className="font-semibold">Recent Orders</h2>
+          <h2 className="font-medium">Recent Orders</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

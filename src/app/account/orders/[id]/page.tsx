@@ -61,21 +61,21 @@ export default function OrderDetailPage() {
   return (
     <div className="min-h-screen max-w-3xl mx-auto px-4 md:px-8 py-8 md:py-12 pb-24 md:pb-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-xl md:text-2xl font-bold font-heading">Order Details</h1>
+        <h1 className="text-xl md:text-2xl font-light tracking-wide font-heading">Order Details</h1>
         <Link href="/account/orders"><Button variant="ghost" size="sm">← Back</Button></Link>
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
 
         {/* Status Banner */}
-        <div className={`rounded-2xl p-5 md:p-6 ${cfg.bg}`}>
+        <div className={`p-5 md:p-6 ${cfg.bg}`}>
           <div className="flex items-center gap-3 mb-2">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${cfg.color} bg-white shadow-sm flex-shrink-0`}>
               <cfg.icon size={20} />
             </div>
             <div>
               <p className="text-xs text-muted uppercase tracking-widest font-medium">Current Status</p>
-              <p className={`text-lg font-bold font-heading capitalize ${cfg.color}`}>{cfg.label}</p>
+              <p className={`text-lg font-light tracking-wide font-heading capitalize ${cfg.color}`}>{cfg.label}</p>
             </div>
           </div>
           <p className="text-sm text-muted mt-1 pl-[52px]">{cfg.message}</p>
@@ -83,14 +83,14 @@ export default function OrderDetailPage() {
 
         {/* Progress Tracker */}
         {!isCancelled && (
-          <div className="glass-card rounded-2xl p-5 md:p-6">
-            <h2 className="text-xs font-semibold mb-6 text-muted uppercase tracking-widest">Order Progress</h2>
+          <div className="border border-gold-200/40 p-5 md:p-6">
+            <h2 className="text-xs font-medium mb-6 text-muted uppercase tracking-widest">Order Progress</h2>
             <div className="relative">
               {/* Background line */}
               <div className="absolute top-5 left-5 right-5 h-0.5 bg-gold-100 z-0" />
               {/* Filled line */}
               <div
-                className="absolute top-5 left-5 h-0.5 gold-gradient-bg z-0 transition-all duration-700"
+                className="absolute top-5 left-5 h-0.5 bg-foreground z-0 transition-all duration-700"
                 style={{
                   width: currentStatusIndex <= 0
                     ? '0%'
@@ -108,13 +108,13 @@ export default function OrderDetailPage() {
                         animate={{ scale: isCurrent ? 1.2 : 1 }}
                         transition={{ type: 'spring', stiffness: 300 }}
                         className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
-                          isCompleted ? 'gold-gradient-bg border-gold-300 shadow-md' : 'bg-white border-gold-200'
+                          isCompleted ? 'bg-foreground border-gold-300 shadow-md' : 'bg-white border-gold-200/40'
                         }`}
                       >
-                        <StepIcon size={15} className={isCompleted ? 'text-white' : 'text-gold-300'} />
+                        <StepIcon size={15} className={isCompleted ? 'text-gold-50' : 'text-gold-300'} />
                       </motion.div>
                       <span className={`text-[9px] md:text-xs capitalize text-center leading-tight ${
-                        isCurrent ? 'font-bold text-gold-600' : isCompleted ? 'font-medium text-foreground' : 'text-muted'
+                        isCurrent ? 'font-bold text-foreground' : isCompleted ? 'font-medium text-foreground' : 'text-muted'
                       }`}>
                         {STATUS_CONFIG[step].label}
                       </span>
@@ -127,9 +127,9 @@ export default function OrderDetailPage() {
         )}
 
         {/* Order Info & Items */}
-        <div className="glass-card rounded-2xl p-5 md:p-6">
+        <div className="border border-gold-200/40 p-5 md:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
-            <p className="font-mono text-sm font-semibold">{order.order_number}</p>
+            <p className="font-mono text-sm font-medium">{order.order_number}</p>
             <p className="text-xs text-muted">{new Date(order.created_at).toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
 
@@ -145,7 +145,7 @@ export default function OrderDetailPage() {
             ))}
           </div>
 
-          <div className="space-y-1.5 text-sm pt-3 border-t border-gold-100">
+          <div className="space-y-1.5 text-sm pt-3 border-t border-gold-200/40">
             <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
             {order.discount_amount > 0 && (
               <div className="flex justify-between text-green-600"><span>Discount</span><span>-{formatPrice(order.discount_amount)}</span></div>
@@ -154,16 +154,16 @@ export default function OrderDetailPage() {
               <span className="text-muted">Delivery</span>
               <span>{order.delivery_charges === 0 ? 'Free' : formatPrice(order.delivery_charges)}</span>
             </div>
-            <div className="flex justify-between font-bold text-base pt-2 border-t border-gold-100">
+            <div className="flex justify-between font-bold text-base pt-2 border-t border-gold-200/40">
               <span>Total</span>
-              <span className="text-gold-600">{formatPrice(order.total)}</span>
+              <span className="text-foreground">{formatPrice(order.total)}</span>
             </div>
           </div>
         </div>
 
         {/* Shipping Address */}
-        <div className="glass-card rounded-2xl p-5 md:p-6">
-          <h2 className="text-xs font-semibold mb-3 uppercase tracking-widest text-muted">Shipping Address</h2>
+        <div className="border border-gold-200/40 p-5 md:p-6">
+          <h2 className="text-xs font-medium mb-3 uppercase tracking-widest text-muted">Shipping Address</h2>
           <p className="text-sm font-medium">{order.first_name} {order.last_name}</p>
           <p className="text-sm text-muted">{order.address}</p>
           <p className="text-sm text-muted">{order.city}{order.postal_code ? `, ${order.postal_code}` : ''}</p>
@@ -172,8 +172,8 @@ export default function OrderDetailPage() {
         </div>
 
         {order.notes && (
-          <div className="glass-card rounded-2xl p-5 md:p-6">
-            <h2 className="text-xs font-semibold mb-2 uppercase tracking-widest text-muted">Order Notes</h2>
+          <div className="border border-gold-200/40 p-5 md:p-6">
+            <h2 className="text-xs font-medium mb-2 uppercase tracking-widest text-muted">Order Notes</h2>
             <p className="text-sm text-muted">{order.notes}</p>
           </div>
         )}

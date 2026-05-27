@@ -46,18 +46,26 @@ export default function ContactPage() {
   ].filter((s) => s.value);
 
   return (
-    <div className="min-h-screen max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-20">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold gold-gradient-text mb-3">Get in Touch</h1>
-          <p className="text-muted">We&apos;d love to hear from you</p>
-        </div>
+    <div className="min-h-screen pb-20 md:pb-0">
+      {/* Header */}
+      <section className="py-20 md:py-28 text-center px-6 md:px-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">Contact</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-heading font-light text-foreground tracking-wide mb-4">Get in Touch</h1>
+          <p className="text-sm md:text-base font-body text-muted font-light">We would love to hear from you</p>
+        </motion.div>
+      </section>
 
-        <div className="grid md:grid-cols-2 gap-10">
+      <div className="max-w-[1000px] mx-auto px-6 md:px-12 pb-16">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16">
           {/* Contact Form */}
-          <div className="glass-card rounded-2xl p-6 md:p-8">
-            <h2 className="text-lg font-semibold mb-6">Send a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-6">Send a Message</h2>
+            <form onSubmit={handleSubmit} className="space-y-5">
               <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
               <Input label="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required />
@@ -66,10 +74,10 @@ export default function ContactPage() {
             </form>
           </div>
 
-          {/* Social Links */}
-          <div className="space-y-6">
-            <div className="glass-card rounded-2xl p-6 md:p-8">
-              <h2 className="text-lg font-semibold mb-6">Connect With Us</h2>
+          {/* Social Links + Info */}
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-6">Connect With Us</h2>
               <div className="space-y-4">
                 {socials.map((s) => (
                   <a
@@ -77,29 +85,29 @@ export default function ContactPage() {
                     href={s.href!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-gold-50 transition-colors group"
+                    className="flex items-center gap-4 p-3 border border-gold-200/40 hover:border-gold-300 transition-colors group"
                   >
-                    <div className="w-10 h-10 rounded-full bg-gold-50 flex items-center justify-center group-hover:gold-gradient-bg transition-all">
-                      <s.icon size={18} className="text-gold-500 group-hover:text-white transition-colors" />
-                    </div>
+                    <s.icon size={16} strokeWidth={1.5} className="text-muted group-hover:text-foreground transition-colors" />
                     <div>
-                      <p className="font-medium text-sm">{s.label}</p>
-                      <p className="text-xs text-muted">{s.value}</p>
+                      <p className="text-sm font-body font-medium">{s.label}</p>
+                      <p className="text-xs font-body text-muted font-light">{s.value}</p>
                     </div>
                   </a>
                 ))}
               </div>
             </div>
 
-            <div className="glass-card rounded-2xl p-6 md:p-8">
-              <h2 className="text-lg font-semibold mb-3">Shipping Info</h2>
-              <p className="text-sm text-muted mb-2">Standard delivery: <span className="font-semibold text-gold-500">PKR 250</span></p>
-              <p className="text-sm text-muted">Free delivery on orders above <span className="font-semibold text-gold-500">PKR 5,000</span></p>
-              <p className="text-sm text-muted mt-3">Cash on Delivery only</p>
+            <div className="border-t border-gold-200/40 pt-8">
+              <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-4">Shipping Info</h2>
+              <div className="space-y-2">
+                <p className="text-sm font-body text-muted font-light">Standard delivery: <span className="text-foreground font-medium">PKR 250</span></p>
+                <p className="text-sm font-body text-muted font-light">Free delivery on orders above <span className="text-foreground font-medium">PKR 5,000</span></p>
+                <p className="text-sm font-body text-muted font-light mt-3">Cash on Delivery only</p>
+              </div>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

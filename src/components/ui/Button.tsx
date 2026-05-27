@@ -11,19 +11,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'gold', size = 'md', loading, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'inline-flex items-center justify-center rounded-none font-body font-medium tracking-[0.1em] uppercase transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
     
     const variants = {
       gold: 'btn-gold text-white',
       outline: 'btn-gold-outline',
-      ghost: 'text-gold-600 hover:bg-gold-50 hover:text-gold-700',
+      ghost: 'text-foreground hover:bg-gold-50',
       danger: 'bg-red-500 text-white hover:bg-red-600',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-5 py-2.5 text-sm',
-      lg: 'px-8 py-3.5 text-base',
+      sm: 'px-3 py-1.5 text-[11px]',
+      md: 'px-5 py-2.5 text-[11px]',
+      lg: 'px-8 py-3.5 text-[12px]',
     };
 
     return (

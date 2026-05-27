@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { motion } from 'framer-motion';
 import AnimatedSection from '@/components/ui/AnimatedSection';
-import { Sparkles, Leaf, Heart, Shield, Eye, Star } from 'lucide-react';
 
 export default function AboutPage() {
   const [aboutText, setAboutText] = useState('');
@@ -17,42 +16,46 @@ export default function AboutPage() {
   }, []);
 
   const values = [
-    { icon: Leaf, title: 'Natural Ingredients', desc: 'Every product uses pure, natural ingredients sourced with care.' },
-    { icon: Shield, title: 'Dermatologist Tested', desc: 'All formulas are tested and approved for all skin types.' },
-    { icon: Heart, title: 'Made with Love', desc: 'Each product is crafted with genuine passion for skincare.' },
-    { icon: Sparkles, title: 'Visible Results', desc: 'See the difference in your skin within the first week.' },
-    { icon: Eye, title: 'Transparent', desc: 'We list every single ingredient — no hidden chemicals.' },
-    { icon: Star, title: 'Premium Quality', desc: 'Luxury skincare without the luxury price tag.' },
+    { title: 'Natural Ingredients', desc: 'Every product uses pure, natural ingredients sourced with care.' },
+    { title: 'Dermatologist Tested', desc: 'All formulas are tested and approved for all skin types.' },
+    { title: 'Made with Love', desc: 'Each product is crafted with genuine passion for skincare.' },
+    { title: 'Visible Results', desc: 'See the difference in your skin within the first week.' },
+    { title: 'Transparent', desc: 'We list every single ingredient — no hidden chemicals.' },
+    { title: 'Premium Quality', desc: 'Luxury skincare without the luxury price tag.' },
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       {/* Hero */}
-      <section className="relative py-20 md:py-32 text-center px-4">
-        <div className="absolute inset-0 gold-gradient-bg opacity-5" />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="relative max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 gold-gradient-text">Our Story</h1>
-          <p className="text-lg md:text-xl text-muted leading-relaxed">
-            AFORA was born from a simple belief — that everyone deserves radiant, healthy skin without compromise.
+      <section className="py-24 md:py-36 text-center px-6 md:px-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">About Us</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-light text-foreground tracking-wide mb-6">Our Story</h1>
+          <p className="text-base md:text-lg font-body text-muted font-light leading-relaxed">
+            Born from a simple belief — that everyone deserves radiant, healthy skin without compromise.
           </p>
         </motion.div>
       </section>
 
       {/* Founder */}
       <AnimatedSection>
-        <section className="max-w-4xl mx-auto px-4 md:px-8 py-16">
-          <div className="glass-card rounded-2xl p-8 md:p-12">
-            <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6 text-center">Meet the Founder</h2>
-            <div className="prose prose-lg text-muted mx-auto text-center">
-              <p className="mb-4">
-                I&apos;m <span className="font-semibold text-gold-500">Sidra Shahzad</span> — just a woman deeply passionate about skincare. 
+        <section className="max-w-3xl mx-auto px-6 md:px-12 py-16 md:py-20">
+          <div className="border-t border-b border-gold-200/40 py-12 md:py-16">
+            <h2 className="text-2xl md:text-4xl font-heading font-light text-center mb-8 tracking-wide">The Founder</h2>
+            <div className="text-center space-y-5 font-body text-muted font-light leading-relaxed">
+              <p>
+                I&apos;m <span className="text-foreground font-medium">Sidra Shahzad</span> — deeply passionate about skincare. 
                 After years of struggling with products full of hidden chemicals, I decided to create something different.
               </p>
-              <p className="mb-4">
+              <p>
                 AFORA is my love letter to clean beauty. Every product in our 6-step ritual is formulated with ingredients 
                 I trust and would use on my own skin. No fillers, no shortcuts, just results.
               </p>
-              {aboutText && <p className="text-sm italic border-t border-gold-100 pt-4 mt-4">{aboutText}</p>}
+              {aboutText && <p className="text-sm italic border-t border-gold-200/40 pt-6 mt-6">{aboutText}</p>}
             </div>
           </div>
         </section>
@@ -60,23 +63,24 @@ export default function AboutPage() {
 
       {/* Values */}
       <AnimatedSection>
-        <section className="max-w-5xl mx-auto px-4 md:px-8 py-16">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-center mb-12">Our Values</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <section className="max-w-[1000px] mx-auto px-6 md:px-12 py-16 md:py-20">
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">What We Stand For</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-gold-200/40">
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: i * 0.08 }}
                 viewport={{ once: true }}
-                className="text-center p-6"
+                className="bg-gold-50 p-6 md:p-8 text-center"
               >
-                <div className="w-14 h-14 rounded-full gold-gradient-bg flex items-center justify-center mx-auto mb-4">
-                  <v.icon size={24} className="text-white" />
-                </div>
-                <h3 className="font-semibold mb-2">{v.title}</h3>
-                <p className="text-sm text-muted">{v.desc}</p>
+                <h3 className="text-sm font-heading font-medium mb-2 tracking-wide">{v.title}</h3>
+                <p className="text-xs font-body text-muted font-light">{v.desc}</p>
               </motion.div>
             ))}
           </div>

@@ -51,15 +51,15 @@ export default function OrderConfirmationPage() {
           <CheckCircle size={40} className="text-green-500" />
         </motion.div>
 
-        <h1 className="text-2xl md:text-3xl font-bold font-heading mb-2">Order Confirmed!</h1>
+        <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading mb-2">Order Confirmed!</h1>
         <p className="text-muted mb-6">
           Thank you for your order. We&apos;ll send you an email confirmation shortly.
         </p>
 
-        <div className="glass-card rounded-xl p-6 text-left mb-8">
+        <div className="border border-gold-200/40 p-6 text-left mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Package size={18} className="text-gold-400" />
-            <h2 className="font-semibold">Order Details</h2>
+            <Package size={18} className="text-muted" />
+            <h2 className="font-medium">Order Details</h2>
           </div>
 
           <div className="space-y-2 text-sm">
@@ -69,14 +69,14 @@ export default function OrderConfirmationPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted">Status</span>
-              <span className="text-gold-500 capitalize font-medium">{order.status}</span>
+              <span className="text-foreground capitalize font-medium">{order.status}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted">Payment</span>
               <span>Cash on Delivery</span>
             </div>
 
-            <div className="border-t border-gold-100 pt-3 mt-3 space-y-1">
+            <div className="border-t border-gold-200/40 pt-3 mt-3 space-y-1">
               {order.items?.map((item) => (
                 <div key={item.id} className="flex justify-between text-sm">
                   <span>{item.product_name} × {item.quantity}</span>
@@ -85,7 +85,7 @@ export default function OrderConfirmationPage() {
               ))}
             </div>
 
-            <div className="border-t border-gold-100 pt-3 space-y-1">
+            <div className="border-t border-gold-200/40 pt-3 space-y-1">
               <div className="flex justify-between">
                 <span className="text-muted">Subtotal</span>
                 <span>{formatPrice(order.subtotal)}</span>
@@ -100,14 +100,14 @@ export default function OrderConfirmationPage() {
                 <span className="text-muted">Delivery</span>
                 <span>{order.delivery_charges === 0 ? 'Free' : formatPrice(order.delivery_charges)}</span>
               </div>
-              <div className="flex justify-between font-bold text-base pt-2 border-t border-gold-100">
+              <div className="flex justify-between font-bold text-base pt-2 border-t border-gold-200/40">
                 <span>Total</span>
-                <span className="text-gold-600">{formatPrice(order.total)}</span>
+                <span className="text-foreground">{formatPrice(order.total)}</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-gold-100 text-sm">
+          <div className="mt-4 pt-3 border-t border-gold-200/40 text-sm">
             <p className="text-muted">Delivering to:</p>
             <p className="font-medium">{order.first_name} {order.last_name}</p>
             <p className="text-muted">{order.address}, {order.city} {order.postal_code}</p>

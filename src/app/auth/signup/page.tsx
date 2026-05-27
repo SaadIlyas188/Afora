@@ -44,10 +44,15 @@ export default function SignupPage() {
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold font-heading gold-gradient-text mb-2">Create Account</h1>
-          <p className="text-sm text-muted">Join the AFORA family</p>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-8 h-px bg-gold-300" />
+            <span className="text-[10px] font-body tracking-[0.3em] uppercase text-muted">Join Us</span>
+            <div className="w-8 h-px bg-gold-300" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-heading font-light text-foreground tracking-wide mb-2">Create Account</h1>
+          <p className="text-sm font-body text-muted font-light">Join the AFORA family</p>
         </div>
-        <div className="glass-card rounded-2xl p-6 md:p-8">
+        <div className="border border-gold-200/40 p-6 md:p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Sidra" required />
@@ -60,7 +65,7 @@ export default function SignupPage() {
           </form>
           <p className="text-sm text-muted text-center mt-6">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-gold-500 hover:underline font-medium">Sign In</Link>
+            <Link href="/auth/login" className="text-foreground hover:underline font-medium">Sign In</Link>
           </p>
         </div>
       </motion.div>

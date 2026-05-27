@@ -53,7 +53,7 @@ export default function WishlistPage() {
   return (
     <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold font-heading">My Wishlist</h1>
+        <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading">My Wishlist</h1>
         <Link href="/account"><Button variant="ghost" size="sm">← Back</Button></Link>
       </div>
 
@@ -64,14 +64,14 @@ export default function WishlistPage() {
           {products.map((product, i) => {
             const primaryImage = product.images?.find((img) => img.is_primary) || product.images?.[0];
             return (
-              <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="glass-card rounded-xl p-4 flex gap-4">
-                <Link href={`/products/${product.slug}`} className="w-24 h-24 rounded-lg overflow-hidden bg-cream-100 flex-shrink-0">
+              <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="border border-gold-200/40 p-4 flex gap-4">
+                <Link href={`/products/${product.slug}`} className="w-24 h-24 overflow-hidden bg-cream-100 flex-shrink-0">
                   <Image src={getImageUrl(primaryImage?.image_url ?? null)} alt={product.name} width={96} height={96} className="w-full h-full object-cover" />
                 </Link>
                 <div className="flex-1">
-                  <Link href={`/products/${product.slug}`} className="font-semibold text-sm hover:text-gold-500">{product.name}</Link>
-                  <p className="text-xs text-gold-400 mb-1">{product.category?.name}</p>
-                  <p className="text-sm font-semibold text-gold-600 mb-3">{formatPrice(product.price)}</p>
+                  <Link href={`/products/${product.slug}`} className="font-medium text-sm hover:text-foreground">{product.name}</Link>
+                  <p className="text-xs text-muted mb-1">{product.category?.name}</p>
+                  <p className="text-sm font-medium text-foreground mb-3">{formatPrice(product.price)}</p>
                   <div className="flex gap-2">
                     <Button size="sm" onClick={() => handleMoveToCart(product)} className="gap-1 text-xs"><ShoppingBag size={12} /> Move to Cart</Button>
                     <Button size="sm" variant="ghost" onClick={() => toggleWishlist(product.id, product.name)} className="text-red-400"><Trash2 size={14} /></Button>

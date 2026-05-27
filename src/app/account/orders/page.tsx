@@ -59,7 +59,7 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold font-heading">My Orders</h1>
+        <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading">My Orders</h1>
         <Link href="/account"><Button variant="ghost" size="sm">← Back</Button></Link>
       </div>
 
@@ -73,7 +73,7 @@ export default function OrdersPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="glass-card rounded-xl p-4 md:p-6"
+              className="border border-gold-200/40 p-4 md:p-6"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
                 <div>
@@ -81,10 +81,10 @@ export default function OrdersPage() {
                   <p className="text-xs text-muted">{new Date(order.created_at).toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(order.status)}`}>
+                  <span className={`px-3 py-1 text-xs font-medium capitalize ${getStatusColor(order.status)}`}>
                     {order.status}
                   </span>
-                  <span className="font-bold text-gold-600">{formatPrice(order.total)}</span>
+                  <span className="font-bold text-foreground">{formatPrice(order.total)}</span>
                 </div>
               </div>
 
