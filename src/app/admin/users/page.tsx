@@ -21,7 +21,26 @@ export default function AdminUsersPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
       ) : (
-      <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
+      <>
+        {/* Mobile cards */}
+        <div className="md:hidden space-y-3">
+          {users.map((u) => (
+            <div key={u.id} className="bg-white rounded-xl border border-gold-50 p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium text-sm">{u.first_name} {u.last_name}</p>
+                  <p className="text-xs text-muted mt-0.5">{u.phone || '—'}</p>
+                  <p className="text-xs text-muted">{u.city || '—'}</p>
+                  <p className="text-xs text-muted">{new Date(u.created_at).toLocaleDateString()}</p>
+                </div>
+                <Badge color={u.role === 'admin' ? 'gold' : 'gray'}>{u.role}</Badge>
+              </div>
+            </div>
+          ))}
+          {users.length === 0 && <p className="text-sm text-muted text-center py-8">No users</p>}
+        </div>
+        {/* Desktop table */}
+        <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
             <tr>
@@ -44,7 +63,8 @@ export default function AdminUsersPage() {
             ))}
           </tbody>
         </table>
-      </div>
+        </div>
+      </>
       )}
     </div>
   );

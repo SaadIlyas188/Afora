@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex overflow-x-hidden">
       {/* Sidebar - desktop */}
       <aside className="hidden md:flex w-60 bg-white border-r border-gold-200/40 flex-col sticky top-0 h-screen overflow-y-auto">
         <div className="p-5 border-b border-gold-200/40">
@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Main content */}
-      <main className="flex-1 bg-cream-50 min-h-screen p-4 md:p-8 mt-12 md:mt-0 mb-16 md:mb-0">
+      <main className="flex-1 bg-cream-50 min-h-screen p-4 md:p-8 mt-12 md:mt-0 mb-16 md:mb-0 overflow-x-hidden min-w-0">
         {children}
       </main>
     </div>

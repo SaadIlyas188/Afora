@@ -58,7 +58,32 @@ export default function AdminPromosPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
       ) : (
-      <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
+      <>
+        {/* Mobile cards */}
+        <div className="md:hidden space-y-3">
+          {promos.map((p) => (
+            <div key={p.id} className="bg-white rounded-xl border border-gold-50 p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-mono font-medium text-sm">{p.code}</p>
+                  <p className="text-xs text-muted mt-0.5">
+                    {p.discount_type === 'percentage' ? `${p.discount_value}% off` : `PKR ${p.discount_value} off`}
+                    {p.min_order_amount ? ` · min PKR ${p.min_order_amount}` : ''}
+                  </p>
+                  <p className="text-xs text-muted">{p.used_count || 0}/{p.max_uses || '∞'} uses{p.expires_at ? ` · exp ${new Date(p.expires_at).toLocaleDateString()}` : ''}</p>
+                </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <Badge color={p.is_active ? 'green' : 'gray'}>{p.is_active ? 'On' : 'Off'}</Badge>
+                  <button onClick={() => openEdit(p)} className="p-1.5 rounded hover:bg-gold-50"><Edit2 size={14} /></button>
+                  <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded hover:bg-red-50 text-red-400"><Trash2 size={14} /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {promos.length === 0 && <p className="text-sm text-muted text-center py-8">No promo codes</p>}
+        </div>
+        {/* Desktop table */}
+        <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
             <tr>
@@ -88,7 +113,8 @@ export default function AdminPromosPage() {
             ))}
           </tbody>
         </table>
-      </div>
+        </div>
+      </>
       )}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit Promo' : 'New Promo'}>
         <div className="space-y-4">

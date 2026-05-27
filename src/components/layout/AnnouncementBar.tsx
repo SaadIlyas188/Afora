@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AnnouncementBar() {
   const [text, setText] = useState('');
+  const pathname = usePathname();
 
   useEffect(() => {
     const supabase = createClient();
@@ -18,7 +20,7 @@ export default function AnnouncementBar() {
       });
   }, []);
 
-  if (!text) return null;
+  if (!text || pathname?.startsWith('/admin')) return null;
 
   return (
     <div className="bg-foreground text-gold-50 text-center py-2.5 px-4">

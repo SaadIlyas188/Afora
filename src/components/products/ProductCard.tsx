@@ -68,7 +68,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             {/* Wishlist */}
             <button
               onClick={handleToggleWishlist}
-              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center transition-all cursor-pointer opacity-0 group-hover:opacity-100 md:opacity-100"
+              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center transition-all cursor-pointer opacity-100"
             >
               <Heart
                 size={16}

@@ -296,10 +296,10 @@ export default function AdminProductsPage() {
             </div>
             <div className="space-y-2">
               {ingredients.map((ing, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  <input value={ing.name} onChange={(e) => { const n = [...ingredients]; n[i].name = e.target.value; setIngredients(n); }} placeholder="Ingredient name" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
-                  <input value={ing.description} onChange={(e) => { const n = [...ingredients]; n[i].description = e.target.value; setIngredients(n); }} placeholder="Benefit" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
-                  <button onClick={() => setIngredients(ingredients.filter((_, j) => j !== i))} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-red-400 cursor-pointer text-lg leading-none flex-shrink-0">&times;</button>
+                <div key={i} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                  <input value={ing.name} onChange={(e) => { const n = [...ingredients]; n[i].name = e.target.value; setIngredients(n); }} placeholder="Ingredient name" className="w-full sm:flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
+                  <input value={ing.description} onChange={(e) => { const n = [...ingredients]; n[i].description = e.target.value; setIngredients(n); }} placeholder="Benefit" className="w-full sm:flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
+                  <button onClick={() => setIngredients(ingredients.filter((_, j) => j !== i))} className="self-end sm:self-auto w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-red-400 cursor-pointer text-lg leading-none flex-shrink-0">&times;</button>
                 </div>
               ))}
               {ingredients.length === 0 && <p className="text-xs text-muted py-1">No ingredients added</p>}
