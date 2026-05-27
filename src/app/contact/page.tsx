@@ -49,35 +49,72 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen pb-20 md:pb-0">
-      {/* Header */}
-      <section className="py-20 md:py-28 text-center px-6 md:px-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="w-8 h-px bg-gold-300" />
-            <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">Contact</span>
-            <div className="w-8 h-px bg-gold-300" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-heading font-light text-foreground tracking-wide mb-4">Get in Touch</h1>
-          <p className="text-sm md:text-base font-body text-muted font-light">We would love to hear from you</p>
-        </motion.div>
-      </section>
+      {/* Header — compact on mobile, spacious on desktop */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="pt-7 pb-5 px-5 border-b border-gold-200/40 md:border-none md:py-28 md:text-center md:px-12"
+      >
+        <p className="text-[9px] font-body tracking-[0.28em] uppercase text-muted mb-1 md:hidden">Contact</p>
+        <h1 className="text-[1.65rem] md:text-6xl font-heading font-light text-foreground tracking-wide md:mb-4">Get in Touch</h1>
+        <div className="hidden md:flex items-center justify-center gap-4 mb-8 mt-4">
+          <div className="w-8 h-px bg-gold-300" />
+          <span className="text-[10px] font-body tracking-[0.3em] uppercase text-muted">Contact</span>
+          <div className="w-8 h-px bg-gold-300" />
+        </div>
+        <p className="hidden md:block text-base font-body text-muted font-light">We would love to hear from you</p>
+      </motion.section>
 
-      <div className="max-w-[1000px] mx-auto px-6 md:px-12 pb-16">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16">
+      <div className="max-w-[1000px] mx-auto px-5 md:px-12 pt-5 pb-10 md:pt-0 md:pb-16">
+        {/* Mobile-only: socials grid + shipping strip */}
+        <div className="md:hidden mb-5">
+          {!settingsLoaded ? (
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-10 bg-gold-100/50 rounded-none animate-pulse" />
+              ))}
+            </div>
+          ) : socials.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 px-3 py-2.5 border border-gold-200/50 bg-gold-50/60 hover:border-gold-400/70 transition-colors"
+                >
+                  <s.icon size={13} strokeWidth={1.5} style={{ color: '#c8a951' }} />
+                  <span className="text-[11px] font-body font-medium tracking-wide">{s.label}</span>
+                </a>
+              ))}
+            </div>
+          ) : null}
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] font-body text-muted pt-2.5 border-t border-gold-200/30">
+            <span>Delivery: <span className="text-foreground font-medium">PKR 250</span></span>
+            <span className="text-gold-400/50">·</span>
+            <span>Free above <span className="text-foreground font-medium">PKR 5,000</span></span>
+            <span className="text-gold-400/50">·</span>
+            <span>Cash on Delivery</span>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 md:gap-16">
           {/* Contact Form */}
           <div>
-            <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-6">Send a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-4">Send a Message</h2>
+            <form onSubmit={handleSubmit} className="space-y-3.5 md:space-y-5">
               <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
               <Input label="Subject" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required />
-              <Textarea label="Message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={5} required />
+              <Textarea label="Message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} required />
               <Button type="submit" loading={loading} className="w-full" size="lg">Send Message</Button>
             </form>
           </div>
 
-          {/* Social Links + Info */}
-          <div className="space-y-10">
+          {/* Social Links + Info — desktop only */}
+          <div className="hidden md:block space-y-10">
             <div>
               <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-6">Connect With Us</h2>
               {!settingsLoaded ? (
@@ -112,7 +149,6 @@ export default function ContactPage() {
                 </div>
               )}
             </div>
-
             <div className="border-t border-gold-200/40 pt-8">
               <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-4">Shipping Info</h2>
               <div className="space-y-2">

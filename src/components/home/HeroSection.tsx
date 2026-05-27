@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gold-50">
+    <section className="relative min-h-[60vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gold-50">
       {/* Background — no harsh split, just elegant depth */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Soft central radial warmth */}
@@ -59,7 +59,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="flex items-center gap-4 mb-8 md:mb-10"
+            className="flex items-center gap-4 mb-4 md:mb-10"
           >
             <motion.div
               initial={{ width: 0 }}
@@ -85,7 +85,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-[clamp(3.5rem,12vw,9rem)] font-heading font-light tracking-[0.15em] leading-[0.9] mb-4"
+            className="text-[clamp(2.6rem,10vw,9rem)] font-heading font-light tracking-[0.15em] leading-[0.9] mb-4"
             style={{ color: '#c8a951' }}
           >
             AFORA
@@ -95,7 +95,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-sm md:text-base font-heading font-light tracking-[0.2em] text-foreground/70 mb-10 md:mb-14"
+            className="text-sm md:text-base font-heading font-light tracking-[0.2em] text-foreground/70 mb-4 md:mb-14"
           >
             by Sidra Shahzad
           </motion.p>
@@ -105,7 +105,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="text-sm md:text-lg font-body font-light text-muted leading-relaxed mb-10 md:mb-14 max-w-md mx-auto"
+            className="text-sm md:text-lg font-body font-light text-muted leading-relaxed mb-6 md:mb-14 max-w-md mx-auto"
           >
             A 6-step facial ritual crafted for luminous,{' '}
             <br className="hidden md:block" />
@@ -136,7 +136,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.4 }}
-            className="flex items-center gap-8 md:gap-12 mt-16 md:mt-24"
+            className="flex items-center gap-8 md:gap-12 mt-8 md:mt-24"
           >
             {['6-Step System', 'Premium Formulas', 'Nationwide Delivery'].map((item, i) => (
               <div key={item} className="flex items-center gap-3">

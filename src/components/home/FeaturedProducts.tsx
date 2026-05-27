@@ -46,7 +46,42 @@ export default function FeaturedProducts() {
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+        {/* Mobile: horizontal snap scroll — first card centered, next card peeks */}
+        <div className="md:hidden">
+          <div
+            className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar"
+            style={{
+              paddingLeft: 'calc((100vw - 58vw) / 2)',
+              paddingRight: 'calc((100vw - 58vw) / 2)',
+              scrollPaddingLeft: 'calc((100vw - 58vw) / 2)',
+            }}
+          >
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="snap-center flex-shrink-0" style={{ width: '58vw' }}>
+                    <ProductCardSkeleton />
+                  </div>
+                ))
+              : products.map((product, i) => (
+                  <div key={product.id} className="snap-center flex-shrink-0" style={{ width: '58vw' }}>
+                    <ProductCard product={product} index={i} />
+                  </div>
+                ))}
+          </div>
+          {/* Scroll hint */}
+          <div className="flex justify-center gap-1.5 mt-2">
+            {(loading ? Array.from({ length: 4 }) : products).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-full bg-gold-400 transition-all"
+                style={{ width: i === 0 ? '16px' : '4px', height: '4px', opacity: i === 0 ? 0.8 : 0.3 }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-8">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
             : products.map((product, i) => (
