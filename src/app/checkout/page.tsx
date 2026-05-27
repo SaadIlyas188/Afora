@@ -247,7 +247,17 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input label="First Name *" value={form.first_name} onChange={(e) => handleChange('first_name', e.target.value)} error={errors.first_name} placeholder="Sidra" />
                 <Input label="Last Name *" value={form.last_name} onChange={(e) => handleChange('last_name', e.target.value)} error={errors.last_name} placeholder="Shahzad" />
-                <Input label="Email *" type="email" value={form.email} onChange={(e) => handleChange('email', e.target.value)} error={errors.email} placeholder="you@example.com" />
+                {user ? (
+                  <div>
+                    <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-muted mb-1.5">Email</label>
+                    <div className="flex items-center gap-2 border border-gold-200/40 bg-cream-50 px-4 py-2.5">
+                      <span className="text-sm font-body text-foreground/70 flex-1 truncate">{form.email}</span>
+                      <span className="text-[10px] font-body text-muted bg-gold-100 px-2 py-0.5 rounded-full whitespace-nowrap">Verified</span>
+                    </div>
+                  </div>
+                ) : (
+                  <Input label="Email *" type="email" value={form.email} onChange={(e) => handleChange('email', e.target.value)} error={errors.email} placeholder="you@example.com" />
+                )}
                 <Input label="Phone *" type="tel" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} error={errors.phone} placeholder="0300 1234567" />
                 <div className="md:col-span-2">
                   <Input label="Address *" value={form.address} onChange={(e) => handleChange('address', e.target.value)} error={errors.address} placeholder="House/Street/Area" />
