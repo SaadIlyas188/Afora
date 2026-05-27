@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminFAQsPage() {
@@ -15,8 +15,9 @@ export default function AdminFAQsPage() {
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ question: '', answer: '', category: 'General', sort_order: '0', is_active: true });
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const fetch = () => { supabase.from('faqs').select('*').order('sort_order').then(({ data }) => { if (data) setFaqs(data); }); };
+  const fetch = () => { setLoading(true); supabase.from('faqs').select('*').order('sort_order').then(({ data }) => { if (data) setFaqs(data); setLoading(false); }); };
   useEffect(fetch, []);
 
   const openNew = () => { setEditing(null); setForm({ question: '', answer: '', category: 'General', sort_order: '0', is_active: true }); setShowModal(true); };
@@ -40,9 +41,12 @@ export default function AdminFAQsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">FAQs</h1>
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">FAQs</h1>
         <Button onClick={openNew} className="gap-1.5"><Plus size={16} /> Add</Button>
       </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="space-y-3">
         {faqs.map((f) => (
           <div key={f.id} className="bg-white rounded-xl p-4 shadow-sm border border-gold-50 flex items-start justify-between">
@@ -58,11 +62,12 @@ export default function AdminFAQsPage() {
           </div>
         ))}
       </div>
+      )}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit FAQ' : 'New FAQ'}>
         <div className="space-y-4">
           <Input label="Question" value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} required />
           <Textarea label="Answer" value={form.answer} onChange={(e) => setForm({ ...form, answer: e.target.value })} rows={4} required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
             <Input label="Sort Order" type="number" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value })} />
           </div>

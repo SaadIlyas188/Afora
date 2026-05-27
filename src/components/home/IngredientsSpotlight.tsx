@@ -42,7 +42,7 @@ export default function IngredientsSpotlight() {
   const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12">
+    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12" style={{ backgroundColor: '#f7f3eb' }}>
       <div className="max-w-[1400px] mx-auto">
         <AnimatedSection className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">
@@ -69,7 +69,7 @@ export default function IngredientsSpotlight() {
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="bg-gold-50 p-6 md:p-10 group hover:bg-cream-200/50 transition-colors duration-500"
             >
-              <p className="text-[10px] font-body tracking-[0.2em] uppercase text-gold-500 mb-3">{ingredient.aka}</p>
+              <p className="text-[10px] font-body tracking-[0.2em] uppercase mb-3" style={{ color: '#c8a951' }}>{ingredient.aka}</p>
               <h3 className="text-lg md:text-xl font-heading font-medium text-foreground mb-3 tracking-wide">{ingredient.name}</h3>
               <p className="text-xs md:text-sm font-body text-muted leading-relaxed font-light">{ingredient.benefit}</p>
             </motion.div>

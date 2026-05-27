@@ -34,7 +34,7 @@ export default function SignupPage() {
     if (error) {
       toast.error(error);
     } else {
-      toast.success('Account created! Please check your email to verify.');
+      toast.success('Welcome to AFORA! Your account is ready.');
       router.push('/account');
     }
     setLoading(false);

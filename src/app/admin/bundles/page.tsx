@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminBundlesPage() {
@@ -18,9 +18,11 @@ export default function AdminBundlesPage() {
   const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', compare_at_price: '', is_active: true });
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchBundles = () => {
-    supabase.from('bundles').select('*, bundle_products(product_id)').order('created_at', { ascending: false }).then(({ data }) => { if (data) setBundles(data); });
+    setLoading(true);
+    supabase.from('bundles').select('*, bundle_products(product_id)').order('created_at', { ascending: false }).then(({ data }) => { if (data) setBundles(data); setLoading(false); });
   };
 
   useEffect(() => {
@@ -65,9 +67,12 @@ export default function AdminBundlesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Bundles</h1>
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">Bundles</h1>
         <Button onClick={openNew} className="gap-1.5"><Plus size={16} /> Add</Button>
       </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
@@ -95,13 +100,14 @@ export default function AdminBundlesPage() {
           </tbody>
         </table>
       </div>
+      )}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit Bundle' : 'New Bundle'}>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <Input label="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Price (PKR)" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
             <Input label="Compare Price" type="number" value={form.compare_at_price} onChange={(e) => setForm({ ...form, compare_at_price: e.target.value })} />
           </div>

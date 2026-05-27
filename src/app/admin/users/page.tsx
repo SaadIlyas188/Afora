@@ -3,18 +3,24 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Badge from '@/components/ui/Badge';
+import { Loader2 } from 'lucide-react';
 
 export default function AdminUsersPage() {
   const supabase = createClient();
   const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from('profiles').select('*').order('created_at', { ascending: false }).then(({ data }) => { if (data) setUsers(data); });
+    setLoading(true);
+    supabase.from('profiles').select('*').order('created_at', { ascending: false }).then(({ data }) => { if (data) setUsers(data); setLoading(false); });
   }, []);
 
   return (
     <div>
-      <h1 className="text-2xl font-bold font-heading mb-6">Users</h1>
+      <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide mb-6">Users</h1>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
@@ -39,6 +45,7 @@ export default function AdminUsersPage() {
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }

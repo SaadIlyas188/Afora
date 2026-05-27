@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { formatPrice, getStatusColor } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { Eye } from 'lucide-react';
+import { Eye, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
@@ -15,11 +15,13 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   const fetchOrders = () => {
+    setLoading(true);
     let q = supabase.from('orders').select('*, items:order_items(*)').order('created_at', { ascending: false });
     if (filter !== 'all') q = q.eq('status', filter);
-    q.then(({ data }) => { if (data) setOrders(data); });
+    q.then(({ data }) => { if (data) setOrders(data); setLoading(false); });
   };
   useEffect(fetchOrders, [filter]);
 
@@ -34,16 +36,48 @@ export default function AdminOrdersPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Orders</h1>
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="rounded-lg border border-gold-200 px-3 py-2 text-sm">
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">Orders</h1>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="border border-gold-200/40 px-3 py-2 text-sm focus:outline-none bg-white">
           <option value="all">All</option>
           {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-cream-50 text-xs text-muted">
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 size={28} className="animate-spin text-muted" />
+        </div>
+      ) : (
+        <>
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {orders.map((o) => (
+              <div key={o.id} className="bg-white border border-gold-200/40 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-mono text-xs text-muted">{o.order_number}</p>
+                    <p className="font-medium text-sm mt-0.5">{o.first_name} {o.last_name}</p>
+                    <p className="text-xs text-muted">{o.city}</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)} className={`text-xs font-medium px-2 py-1 border-0 outline-none ${getStatusColor(o.status)}`}>
+                        {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <span className="text-sm font-medium">{formatPrice(o.total)}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelected(o)} className="p-2 hover:bg-gold-50 transition-colors cursor-pointer flex-shrink-0">
+                    <Eye size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+            {orders.length === 0 && <p className="text-muted text-sm text-center py-8">No orders yet</p>}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border border-gold-200/40 overflow-x-auto">
+            <table className="w-full text-sm">
+            <thead className="bg-cream-50 text-xs text-muted border-b border-gold-200/40">
             <tr>
               <th className="text-left px-4 py-3">Order</th>
               <th className="text-left px-4 py-3">Customer</th>
@@ -56,25 +90,27 @@ export default function AdminOrdersPage() {
           </thead>
           <tbody>
             {orders.map((o) => (
-              <tr key={o.id} className="border-b border-gold-50 last:border-0">
+                <tr key={o.id} className="border-b border-gold-50 last:border-0 hover:bg-cream-50/50 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs">{o.order_number}</td>
                 <td className="px-4 py-3">{o.first_name} {o.last_name}</td>
                 <td className="px-4 py-3 text-muted">{o.city}</td>
                 <td className="px-4 py-3">
-                  <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)} className={`text-xs font-medium rounded-full px-2 py-1 border-0 ${getStatusColor(o.status)}`}>
+                  <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)} className={`text-xs font-medium px-2 py-1 border-0 outline-none ${getStatusColor(o.status)}`}>
                     {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </td>
                 <td className="px-4 py-3 text-right font-medium">{formatPrice(o.total)}</td>
                 <td className="px-4 py-3 text-xs text-muted">{new Date(o.created_at).toLocaleDateString()}</td>
                 <td className="px-4 py-3 text-right">
-                  <button onClick={() => setSelected(o)} className="p-1.5 rounded hover:bg-gold-50"><Eye size={14} /></button>
+                  <button onClick={() => setSelected(o)} className="p-1.5 hover:bg-gold-50 cursor-pointer transition-colors"><Eye size={14} /></button>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+            </table>
+          </div>
+        </>
+      )}
 
       <Modal isOpen={!!selected} onClose={() => setSelected(null)} title={`Order ${selected?.order_number || ''}`}>
         {selected && (

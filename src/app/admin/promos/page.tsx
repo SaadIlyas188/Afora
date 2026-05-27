@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminPromosPage() {
@@ -16,8 +16,9 @@ export default function AdminPromosPage() {
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ code: '', discount_type: 'percentage', discount_value: '', min_order_amount: '', max_uses: '', expires_at: '', is_active: true });
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const fetch = () => { supabase.from('promo_codes').select('*').order('created_at', { ascending: false }).then(({ data }) => { if (data) setPromos(data); }); };
+  const fetch = () => { setLoading(true); supabase.from('promo_codes').select('*').order('created_at', { ascending: false }).then(({ data }) => { if (data) setPromos(data); setLoading(false); }); };
   useEffect(fetch, []);
 
   const openNew = () => { setEditing(null); setForm({ code: '', discount_type: 'percentage', discount_value: '', min_order_amount: '', max_uses: '', expires_at: '', is_active: true }); setShowModal(true); };
@@ -51,9 +52,12 @@ export default function AdminPromosPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Promo Codes</h1>
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">Promo Codes</h1>
         <Button onClick={openNew} className="gap-1.5"><Plus size={16} /> Add</Button>
       </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
@@ -85,10 +89,11 @@ export default function AdminPromosPage() {
           </tbody>
         </table>
       </div>
+      )}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit Promo' : 'New Promo'}>
         <div className="space-y-4">
           <Input label="Code" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="WELCOME10" required />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1.5">Type</label>
               <select value={form.discount_type} onChange={(e) => setForm({ ...form, discount_type: e.target.value })} className="w-full rounded-lg border border-gold-200 px-4 py-2.5 text-sm">
@@ -98,7 +103,7 @@ export default function AdminPromosPage() {
             </div>
             <Input label="Value" type="number" value={form.discount_value} onChange={(e) => setForm({ ...form, discount_value: e.target.value })} required />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="Min Order (PKR)" type="number" value={form.min_order_amount} onChange={(e) => setForm({ ...form, min_order_amount: e.target.value })} />
             <Input label="Max Uses" type="number" value={form.max_uses} onChange={(e) => setForm({ ...form, max_uses: e.target.value })} />
           </div>

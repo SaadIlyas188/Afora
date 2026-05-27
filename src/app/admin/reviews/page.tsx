@@ -5,18 +5,20 @@ import { createClient } from '@/lib/supabase/client';
 import StarRating from '@/components/ui/StarRating';
 import Badge from '@/components/ui/Badge';
 import { toast } from 'sonner';
-import { Check, X } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
 
 export default function AdminReviewsPage() {
   const supabase = createClient();
   const [reviews, setReviews] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   const fetchReviews = () => {
+    setLoading(true);
     let q = supabase.from('reviews').select('*, product:products(name), profile:profiles(first_name, last_name)').order('created_at', { ascending: false });
     if (filter === 'pending') q = q.eq('is_approved', false);
     if (filter === 'approved') q = q.eq('is_approved', true);
-    q.then(({ data }) => { if (data) setReviews(data); });
+    q.then(({ data }) => { if (data) setReviews(data); setLoading(false); });
   };
   useEffect(fetchReviews, [filter]);
 
@@ -36,13 +38,16 @@ export default function AdminReviewsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Reviews</h1>
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">Reviews</h1>
         <select value={filter} onChange={(e) => setFilter(e.target.value)} className="rounded-lg border border-gold-200 px-3 py-2 text-sm">
           <option value="all">All</option>
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
         </select>
       </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="space-y-3">
         {reviews.map((r) => (
           <div key={r.id} className="bg-white rounded-xl p-4 shadow-sm border border-gold-50">
@@ -67,6 +72,7 @@ export default function AdminReviewsPage() {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

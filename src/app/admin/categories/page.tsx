@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Category } from '@/types';
 
@@ -16,8 +16,9 @@ export default function AdminCategoriesPage() {
   const [editing, setEditing] = useState<Category | null>(null);
   const [form, setForm] = useState({ name: '', slug: '', description: '', is_active: true });
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const fetch = () => { supabase.from('categories').select('*').order('name').then(({ data }) => { if (data) setCategories(data); }); };
+  const fetch = () => { setLoading(true); supabase.from('categories').select('*').order('name').then(({ data }) => { if (data) setCategories(data); setLoading(false); }); };
   useEffect(fetch, []);
 
   const openNew = () => { setEditing(null); setForm({ name: '', slug: '', description: '', is_active: true }); setShowModal(true); };
@@ -46,9 +47,12 @@ export default function AdminCategoriesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold font-heading">Categories</h1>
+        <h1 className="text-xl md:text-2xl font-heading font-light tracking-wide">Categories</h1>
         <Button onClick={openNew} className="gap-1.5"><Plus size={16} /> Add</Button>
       </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
+      ) : (
       <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-cream-50 text-xs text-muted">
@@ -69,6 +73,7 @@ export default function AdminCategoriesPage() {
           </tbody>
         </table>
       </div>
+      )}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit Category' : 'New Category'}>
         <div className="space-y-4">
           <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />

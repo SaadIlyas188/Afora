@@ -29,7 +29,7 @@ export default function RitualSteps() {
   if (products.length === 0) return null;
 
   return (
-    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12">
+    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12 bg-cream-50" style={{ backgroundColor: '#fdf9f4' }}>
       <div className="max-w-[1400px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
