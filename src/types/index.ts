@@ -211,10 +211,15 @@ export interface CheckoutFormData {
 
 export interface SiteSettings {
   contact_email: string;
-  whatsapp_number: string;
-  instagram_username: string;
-  facebook_url: string;
+  whatsapp: string;
+  instagram: string;
+  facebook: string;
   about_text: string;
   delivery_charges: string;
-  announcement_bar_text: string;
+  announcement_text: string;
+  // legacy aliases kept for compatibility
+  whatsapp_number?: string;
+  instagram_username?: string;
+  facebook_url?: string;
+  announcement_bar_text?: string;
 }

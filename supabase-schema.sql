@@ -105,7 +105,22 @@ CREATE TABLE public.bundle_products (
   UNIQUE(bundle_id, product_id)
 );
 
--- 8. ORDERS
+-- 8. PROMO CODES (created before orders so the FK reference works)
+CREATE TABLE public.promo_codes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  code TEXT NOT NULL UNIQUE,
+  discount_amount NUMERIC(10,2) NOT NULL,
+  discount_type TEXT DEFAULT 'fixed' CHECK (discount_type IN ('fixed', 'percentage')),
+  min_order_amount NUMERIC(10,2) DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  usage_limit INT,
+  times_used INT DEFAULT 0,
+  starts_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 9. ORDERS
 CREATE TABLE public.orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   order_number TEXT NOT NULL UNIQUE,
@@ -128,7 +143,7 @@ CREATE TABLE public.orders (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 9. ORDER ITEMS
+-- 10. ORDER ITEMS
 CREATE TABLE public.order_items (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
@@ -139,30 +154,6 @@ CREATE TABLE public.order_items (
   unit_price NUMERIC(10,2) NOT NULL,
   total_price NUMERIC(10,2) NOT NULL
 );
-
--- 10. PROMO CODES (must be created before orders references it)
-CREATE TABLE public.promo_codes (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  code TEXT NOT NULL UNIQUE,
-  discount_amount NUMERIC(10,2) NOT NULL,
-  discount_type TEXT DEFAULT 'fixed' CHECK (discount_type IN ('fixed', 'percentage')),
-  min_order_amount NUMERIC(10,2) DEFAULT 0,
-  is_active BOOLEAN DEFAULT true,
-  usage_limit INT,
-  times_used INT DEFAULT 0,
-  starts_at TIMESTAMPTZ,
-  expires_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- NOTE: Since promo_codes must exist before orders, reorder: create promo_codes first
--- Drop and recreate orders with proper reference
--- Actually, let's handle this with ALTER TABLE instead:
--- Remove the FK from orders creation above and add it after promo_codes exists
-
--- If running fresh, you may need to run the tables in this order:
--- profiles, categories, products, product_images, product_ingredients, 
--- bundles, bundle_products, promo_codes, orders, order_items, reviews, wishlists, site_settings, faqs
 
 -- 11. REVIEWS
 CREATE TABLE public.reviews (
@@ -200,6 +191,7 @@ CREATE TABLE public.faqs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
+  category TEXT DEFAULT 'General',
   sort_order INT DEFAULT 0,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now()
@@ -536,25 +528,25 @@ ORDER BY p.step_number;
 -- Site Settings
 INSERT INTO public.site_settings (key, value) VALUES
 ('contact_email', 'info@aforaskincare.com'),
-('whatsapp_number', '+923001234567'),
-('instagram_username', 'aforabysidra'),
-('facebook_url', 'https://facebook.com/aforabysidra'),
+('whatsapp', '03014529676'),
+('instagram', 'afora.pk'),
+('facebook', 'https://www.facebook.com/share/1CoVCdpmpD/'),
 ('about_text', 'AFORA by Sidra Shahzad is a luxury skincare brand born from a deep passion for radiant, healthy skin. Based in Lahore, Pakistan, we believe that every woman deserves to feel confident and beautiful in her own skin. Our carefully crafted facial system combines premium ingredients with cutting-edge skincare science to deliver visible results you can see and feel.'),
 ('delivery_charges', '250'),
-('announcement_bar_text', '✨ Free delivery on orders above Rs. 5,000 — Shop the Complete Facial System & Save Rs. 3,800!');
+('announcement_text', '✨ Free delivery on orders above Rs. 5,000 — Shop the Complete Facial System & Save Rs. 3,800!');
 
 -- FAQs
-INSERT INTO public.faqs (question, answer, sort_order, is_active) VALUES
-('What is the AFORA Complete Facial System?', 'The AFORA Complete Facial System is a 6-step luxury skincare ritual designed to cleanse, exfoliate, polish, hydrate, and brighten your skin. Each product is carefully formulated with premium ingredients and designed to work in harmony for the best results.', 1, true),
-('Can I use the products individually?', 'Yes! While we recommend using the complete system for optimal results, each product is formulated to deliver benefits on its own. You can purchase any product individually based on your skin''s needs.', 2, true),
-('How long will it take to see results?', 'Many customers notice an improvement in skin texture and radiance after their very first use. For best results, we recommend consistent use for at least 2-4 weeks as part of your regular skincare routine.', 3, true),
-('Is AFORA suitable for all skin types?', 'Yes, our products are formulated with gentle yet effective ingredients suitable for all skin types. However, if you have extremely sensitive skin or specific skin conditions, we recommend doing a patch test first.', 4, true),
-('What are the delivery charges?', 'We charge a flat delivery fee of Rs. 250 across Pakistan. Orders above Rs. 5,000 qualify for free delivery!', 5, true),
-('How long does delivery take?', 'We deliver across Pakistan. Orders within Lahore are typically delivered within 2-3 business days. For other cities, delivery takes 3-5 business days.', 6, true),
-('Do you offer Cash on Delivery?', 'Yes! We currently accept Cash on Delivery (COD) as our payment method. Pay when your order arrives at your doorstep.', 7, true),
-('What is your return policy?', 'We want you to love your purchase. If you receive a damaged or incorrect product, please contact us within 48 hours of delivery with photos, and we''ll arrange a replacement.', 8, true),
-('How do I track my order?', 'Once your order is confirmed, you''ll receive email updates at every stage — from confirmation to delivery. You can also check your order status in your account dashboard.', 9, true),
-('How can I contact you?', 'You can reach us via our Contact page, WhatsApp, Instagram DM, or email. We''re based in Lahore and are always happy to help with any questions!', 10, true);
+INSERT INTO public.faqs (question, answer, category, sort_order, is_active) VALUES
+('What is the AFORA Complete Facial System?', 'The AFORA Complete Facial System is a 6-step luxury skincare ritual designed to cleanse, exfoliate, polish, hydrate, and brighten your skin. Each product is carefully formulated with premium ingredients and designed to work in harmony for the best results.', 'About AFORA', 1, true),
+('Can I use the products individually?', 'Yes! While we recommend using the complete system for optimal results, each product is formulated to deliver benefits on its own. You can purchase any product individually based on your skin''s needs.', 'About AFORA', 2, true),
+('How long will it take to see results?', 'Many customers notice an improvement in skin texture and radiance after their very first use. For best results, we recommend consistent use for at least 2-4 weeks as part of your regular skincare routine.', 'About AFORA', 3, true),
+('Is AFORA suitable for all skin types?', 'Yes, our products are formulated with gentle yet effective ingredients suitable for all skin types. However, if you have extremely sensitive skin or specific skin conditions, we recommend doing a patch test first.', 'About AFORA', 4, true),
+('What are the delivery charges?', 'We charge a flat delivery fee of Rs. 250 across Pakistan. Orders above Rs. 5,000 qualify for free delivery!', 'Shipping & Delivery', 5, true),
+('How long does delivery take?', 'We deliver across Pakistan. Orders within Lahore are typically delivered within 2-3 business days. For other cities, delivery takes 3-5 business days.', 'Shipping & Delivery', 6, true),
+('Do you offer Cash on Delivery?', 'Yes! We currently accept Cash on Delivery (COD) as our payment method. Pay when your order arrives at your doorstep.', 'Payments', 7, true),
+('What is your return policy?', 'We want you to love your purchase. If you receive a damaged or incorrect product, please contact us within 48 hours of delivery with photos, and we''ll arrange a replacement.', 'Returns', 8, true),
+('How do I track my order?', 'Once your order is confirmed, you''ll receive email updates at every stage — from confirmation to delivery. You can also check your order status in your account dashboard.', 'Shipping & Delivery', 9, true),
+('How can I contact you?', 'You can reach us on WhatsApp at 03014529676, Instagram @afora.pk, or via our Contact page. We''re based in Lahore and are always happy to help!', 'Contact', 10, true);
 
 
 -- =====================================================

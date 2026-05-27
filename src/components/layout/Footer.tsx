@@ -95,9 +95,9 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-semibold mb-4 text-foreground">Connect With Us</h4>
             <div className="flex gap-3 mb-4">
-              {settings.instagram_username && (
+              {settings.instagram && (
                 <a
-                  href={`https://instagram.com/${settings.instagram_username}`}
+                  href={`https://instagram.com/${settings.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full border border-gold-200 flex items-center justify-center hover:bg-gold-300 hover:text-white hover:border-gold-300 transition-all text-gold-400"
@@ -105,9 +105,9 @@ export default function Footer() {
                   <Camera size={16} />
                 </a>
               )}
-              {settings.facebook_url && (
+              {settings.facebook && (
                 <a
-                  href={settings.facebook_url}
+                  href={settings.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full border border-gold-200 flex items-center justify-center hover:bg-gold-300 hover:text-white hover:border-gold-300 transition-all text-gold-400"
@@ -115,9 +115,9 @@ export default function Footer() {
                   <Globe size={16} />
                 </a>
               )}
-              {settings.whatsapp_number && (
+              {settings.whatsapp && (
                 <a
-                  href={`https://wa.me/${settings.whatsapp_number?.replace(/[^0-9]/g, '')}`}
+                  href={`https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full border border-gold-200 flex items-center justify-center hover:bg-gold-300 hover:text-white hover:border-gold-300 transition-all text-gold-400"
