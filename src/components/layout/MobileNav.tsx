@@ -2,28 +2,32 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, ShoppingBag, Package, User } from 'lucide-react';
+import { Home, Search, ShoppingBag, Package, User, Phone } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
-
-const tabs = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/products', label: 'Shop', icon: Search },
-  { href: '/bundle', label: 'Bundles', icon: Package },
-  { href: '/cart', label: 'Cart', icon: ShoppingBag },
-  { href: '/account', label: 'Account', icon: User },
-];
 
 export default function MobileNav() {
   const pathname = usePathname();
   const { totalItems } = useCart();
+  const { user } = useAuth();
 
-  if (pathname?.startsWith('/admin')) return null;
+  const tabs = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/products', label: 'Shop', icon: Search },
+    { href: '/bundle', label: 'Bundles', icon: Package },
+    { href: '/cart', label: 'Cart', icon: ShoppingBag },
+    user
+      ? { href: '/account', label: 'Account', icon: User }
+      : { href: '/contact', label: 'Contact', icon: Phone },
+  ];
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname?.startsWith(href);
   };
+
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-gold-50/95 backdrop-blur-xl border-t border-gold-200/40 pb-safe">

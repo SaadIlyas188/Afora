@@ -19,7 +19,6 @@ export default function Home() {
     <>
       <HeroSection />
       <HomeBundles />
-      <GoldDivider />
       <RitualSteps />
       <FeaturedProducts />
       <GoldDivider />

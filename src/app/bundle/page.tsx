@@ -127,40 +127,114 @@ export default function BundlePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-6 md:gap-12 items-center`}
               >
-                {/* Image */}
-                <div className="w-full md:w-2/5 relative">
-                  <div className="absolute -top-3 -left-3 z-10">
-                    <span className="text-[10px] font-body tracking-[0.15em] text-muted">Step {product.step_number}</span>
+                {/* ── Mobile: compact timeline strip ── */}
+                <div className="md:hidden flex gap-4 items-start">
+                  {/* Step number + connecting line */}
+                  <div className="flex flex-col items-center flex-shrink-0 pt-1">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-body font-semibold text-white flex-shrink-0"
+                      style={{ backgroundColor: '#c8a951' }}
+                    >
+                      {String(product.step_number ?? index + 1).padStart(2, '0')}
+                    </div>
+                    {index < products.length - 1 && (
+                      <div className="w-px flex-1 mt-2 min-h-[2rem]" style={{ backgroundColor: 'rgba(200,169,81,0.25)' }} />
+                    )}
                   </div>
-                  <div className="aspect-square overflow-hidden bg-cream-100">
-                    <Image
-                      src={getImageUrl(primaryImage?.image_url ?? null)}
-                      alt={product.name}
-                      width={500}
-                      height={500}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+
+                  {/* Card */}
+                  <div className="flex-1 pb-6">
+                    <div className="flex gap-3 items-start mb-3">
+                      {/* Thumbnail */}
+                      <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-cream-200 rounded-xl">
+                        <Image
+                          src={getImageUrl(primaryImage?.image_url ?? null)}
+                          alt={product.name}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      {/* Name + category + price */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[9px] font-body tracking-[0.15em] uppercase text-muted mb-0.5">{product.category?.name}</p>
+                        <h3 className="text-sm font-heading font-light tracking-wide text-foreground leading-snug mb-1">{product.name}</h3>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-body font-medium text-foreground">{formatPrice(product.price)}</span>
+                          <Link href={`/products/${product.slug}`} className="text-[10px] font-body tracking-[0.1em] uppercase hover:opacity-70 transition-opacity" style={{ color: '#c8a951' }}>
+                            View →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs font-body text-muted font-light leading-relaxed mb-2 line-clamp-2">{product.description}</p>
+
+                    {/* How to use inline */}
+                    {product.how_to_use && (
+                      <div className="rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(200,169,81,0.08)' }}>
+                        <p className="text-[10px] font-body font-medium tracking-[0.1em] uppercase mb-0.5" style={{ color: '#c8a951' }}>How to Use</p>
+                        <p className="text-[11px] font-body text-muted font-light leading-relaxed">{product.how_to_use}</p>
+                      </div>
+                    )}
+
+                    {/* Ingredients accordion */}
+                    {product.ingredients && product.ingredients.length > 0 && (
+                      <Accordion
+                        items={[{
+                          title: `Ingredients (${product.ingredients.length})`,
+                          content: (
+                            <div className="space-y-1.5">
+                              {product.ingredients.sort((a, b) => a.sort_order - b.sort_order).map((ing) => (
+                                <div key={ing.id} className="flex gap-2">
+                                  <Check size={12} className="text-muted flex-shrink-0 mt-0.5" />
+                                  <div>
+                                    <span className="text-xs font-medium">{ing.ingredient_name}</span>
+                                    <span className="text-xs text-muted"> — {ing.ingredient_description}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ),
+                        }]}
+                      />
+                    )}
                   </div>
                 </div>
 
-                {/* Info */}
-                <div className="w-full md:w-3/5">
-                  <p className="text-xs text-muted uppercase tracking-wider mb-1">{product.category?.name}</p>
-                  <h3 className="text-xl md:text-2xl font-light tracking-wide font-heading mb-2">{product.name}</h3>
-                  <p className="text-sm font-body text-muted font-light leading-relaxed mb-4">{product.description}</p>
-
-                  <div className="bg-gold-50 p-3 mb-4">
-                    <p className="text-xs font-medium mb-1">How to Use:</p>
-                    <p className="text-xs font-body text-muted font-light">{product.how_to_use}</p>
+                {/* ── Desktop: original alternating layout ── */}
+                <div className={`hidden md:flex ${isEven ? 'flex-row' : 'flex-row-reverse'} gap-12 items-center`}>
+                  {/* Image */}
+                  <div className="w-2/5 relative">
+                    <div className="absolute -top-3 -left-3 z-10">
+                      <span className="text-[10px] font-body tracking-[0.15em] text-muted">Step {product.step_number}</span>
+                    </div>
+                    <div className="aspect-square overflow-hidden bg-cream-100">
+                      <Image
+                        src={getImageUrl(primaryImage?.image_url ?? null)}
+                        alt={product.name}
+                        width={500}
+                        height={500}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
-
-                  {product.ingredients && product.ingredients.length > 0 && (
-                    <Accordion
-                      items={[
-                        {
+                  {/* Info */}
+                  <div className="w-3/5">
+                    <p className="text-xs text-muted uppercase tracking-wider mb-1">{product.category?.name}</p>
+                    <h3 className="text-xl md:text-2xl font-light tracking-wide font-heading mb-2">{product.name}</h3>
+                    <p className="text-sm font-body text-muted font-light leading-relaxed mb-4">{product.description}</p>
+                    <div className="bg-gold-50 p-3 mb-4">
+                      <p className="text-xs font-medium mb-1">How to Use:</p>
+                      <p className="text-xs font-body text-muted font-light">{product.how_to_use}</p>
+                    </div>
+                    {product.ingredients && product.ingredients.length > 0 && (
+                      <Accordion
+                        items={[{
                           title: `View Ingredients (${product.ingredients.length})`,
                           content: (
                             <div className="space-y-2">
@@ -175,16 +249,13 @@ export default function BundlePage() {
                               ))}
                             </div>
                           ),
-                        },
-                      ]}
-                    />
-                  )}
-
-                  <div className="flex items-center justify-between mt-4">
-                    <span className="text-lg font-semibold text-foreground">{formatPrice(product.price)}</span>
-                    <Link href={`/products/${product.slug}`} className="text-xs text-foreground hover:underline">
-                      View Details →
-                    </Link>
+                        }]}
+                      />
+                    )}
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-lg font-semibold text-foreground">{formatPrice(product.price)}</span>
+                      <Link href={`/products/${product.slug}`} className="text-xs text-foreground hover:underline">View Details →</Link>
+                    </div>
                   </div>
                 </div>
               </motion.div>

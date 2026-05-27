@@ -28,7 +28,7 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 px-6 md:px-12 bg-cream-100/50">
+    <section className="py-12 md:py-24 px-6 md:px-12 bg-cream-100/50">
       <div className="max-w-[1400px] mx-auto">
         <AnimatedSection className="text-center mb-16 md:mb-20">
           <div className="flex items-center justify-center gap-4 mb-6">

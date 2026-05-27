@@ -28,7 +28,7 @@ export default function HomeBundles() {
   if (loaded && bundles.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-20 px-5 md:px-12" style={{ backgroundColor: '#fdf9f4' }}>
+    <section className="py-10 md:py-16 px-5 md:px-12 bg-cream-200" style={{ backgroundColor: '#ede9e0' }}>
       <div className="max-w-[1400px] mx-auto">
 
         {/* Header */}
