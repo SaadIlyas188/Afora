@@ -1,0 +1,109 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { formatPrice } from '@/lib/utils';
+import { ShoppingCart, Package, Users, DollarSign, TrendingUp, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+interface Stats {
+  totalOrders: number;
+  totalRevenue: number;
+  totalUsers: number;
+  totalProducts: number;
+  pendingOrders: number;
+  todayOrders: number;
+}
+
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<Stats>({ totalOrders: 0, totalRevenue: 0, totalUsers: 0, totalProducts: 0, pendingOrders: 0, todayOrders: 0 });
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const today = new Date().toISOString().split('T')[0];
+
+    Promise.all([
+      supabase.from('orders').select('id, total, status, created_at'),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('products').select('id', { count: 'exact', head: true }),
+    ]).then(([ordersRes, usersRes, productsRes]) => {
+      const orders = ordersRes.data || [];
+      const rev = orders.filter(o => o.status !== 'cancelled').reduce((sum, o) => sum + o.total, 0);
+      const pending = orders.filter(o => o.status === 'pending').length;
+      const todayO = orders.filter(o => o.created_at.startsWith(today)).length;
+      setStats({
+        totalOrders: orders.length,
+        totalRevenue: rev,
+        totalUsers: usersRes.count || 0,
+        totalProducts: productsRes.count || 0,
+        pendingOrders: pending,
+        todayOrders: todayO,
+      });
+    });
+
+    supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(5).then(({ data }) => {
+      if (data) setRecentOrders(data);
+    });
+  }, []);
+
+  const cards = [
+    { icon: DollarSign, label: 'Total Revenue', value: formatPrice(stats.totalRevenue), color: 'text-green-500' },
+    { icon: ShoppingCart, label: 'Total Orders', value: stats.totalOrders, color: 'text-blue-500' },
+    { icon: Clock, label: 'Pending Orders', value: stats.pendingOrders, color: 'text-yellow-500' },
+    { icon: TrendingUp, label: 'Today\'s Orders', value: stats.todayOrders, color: 'text-purple-500' },
+    { icon: Users, label: 'Customers', value: stats.totalUsers, color: 'text-indigo-500' },
+    { icon: Package, label: 'Products', value: stats.totalProducts, color: 'text-gold-500' },
+  ];
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold font-heading mb-6">Dashboard</h1>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        {cards.map((card, i) => (
+          <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white rounded-xl p-4 md:p-5 shadow-sm border border-gold-50">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center ${card.color}`}>
+                <card.icon size={18} />
+              </div>
+              <div>
+                <p className="text-xs text-muted">{card.label}</p>
+                <p className="text-lg font-bold">{card.value}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Recent Orders */}
+      <div className="bg-white rounded-xl shadow-sm border border-gold-50 overflow-hidden">
+        <div className="p-4 md:p-5 border-b border-gold-50">
+          <h2 className="font-semibold">Recent Orders</h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-cream-50 text-xs text-muted">
+              <tr>
+                <th className="text-left px-4 py-3">Order</th>
+                <th className="text-left px-4 py-3">Customer</th>
+                <th className="text-left px-4 py-3">Status</th>
+                <th className="text-right px-4 py-3">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentOrders.map((order) => (
+                <tr key={order.id} className="border-b border-gold-50 last:border-0">
+                  <td className="px-4 py-3 font-mono text-xs">{order.order_number}</td>
+                  <td className="px-4 py-3">{order.first_name} {order.last_name}</td>
+                  <td className="px-4 py-3"><span className="capitalize text-xs font-medium">{order.status}</span></td>
+                  <td className="px-4 py-3 text-right font-medium">{formatPrice(order.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
