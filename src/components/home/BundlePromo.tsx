@@ -28,7 +28,7 @@ export default function BundlePromo() {
   }, [isInView]);
 
   return (
-    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12 bg-foreground text-gold-50">
+    <section ref={ref} className="py-20 md:py-32 px-6 md:px-12 pb-28 md:pb-32 bg-foreground text-gold-50">
       <div className="max-w-[1000px] mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

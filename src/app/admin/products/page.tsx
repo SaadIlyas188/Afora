@@ -211,81 +211,129 @@ export default function AdminProductsPage() {
       )}
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editing ? 'Edit Product' : 'New Product'} maxWidth="max-w-xl">
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input label="Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <Input label="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto-generated" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Input label="Price (PKR) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
-            <Input label="Compare Price" type="number" value={form.compare_at_price} onChange={(e) => setForm({ ...form, compare_at_price: e.target.value })} />
-            <Input label="Step #" type="number" value={form.step_number} onChange={(e) => setForm({ ...form, step_number: e.target.value })} />
-          </div>
+        <div className="space-y-5">
+
+          {/* Basic Info */}
           <div>
-            <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-2">Category</label>
-            <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className="w-full border border-gold-200/40 bg-white px-4 py-2.5 text-sm focus:outline-none focus:border-foreground">
-              <option value="">None</option>
-              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
-          <Input label="Short Description" value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} />
-          <div>
-            <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-2">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full border border-gold-200/40 bg-white px-4 py-2.5 text-sm focus:outline-none focus:border-foreground resize-none" />
-          </div>
-          <div>
-            <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-2">How to Use</label>
-            <textarea value={form.how_to_use} onChange={(e) => setForm({ ...form, how_to_use: e.target.value })} rows={3} className="w-full border border-gold-200/40 bg-white px-4 py-2.5 text-sm focus:outline-none focus:border-foreground resize-none" />
-          </div>
-          <div className="flex gap-5">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} className="w-4 h-4" /> Active
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={form.is_featured} onChange={(e) => setForm({ ...form, is_featured: e.target.checked })} className="w-4 h-4" /> Featured
-            </label>
+            <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500 mb-3">Basic Info</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Input label="Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+              <Input label="Slug" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto-generated" />
+            </div>
+            <div className="mt-3">
+              <Input label="Short Description" value={form.short_description} onChange={(e) => setForm({ ...form, short_description: e.target.value })} />
+            </div>
           </div>
 
+          <div className="h-px bg-gold-100" />
+
+          {/* Pricing & Category */}
+          <div>
+            <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500 mb-3">Pricing & Category</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <Input label="Price (PKR) *" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+              <Input label="Compare Price" type="number" value={form.compare_at_price} onChange={(e) => setForm({ ...form, compare_at_price: e.target.value })} />
+              <Input label="Step #" type="number" value={form.step_number} onChange={(e) => setForm({ ...form, step_number: e.target.value })} />
+            </div>
+            <div className="mt-3">
+              <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-1.5">Category</label>
+              <select value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} className="w-full border border-gold-200/40 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg transition-colors">
+                <option value="">None</option>
+                {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="h-px bg-gold-100" />
+
+          {/* Status Toggles */}
+          <div>
+            <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500 mb-3">Status</p>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input type="checkbox" checked={form.is_active} onChange={(e) => setForm({ ...form, is_active: e.target.checked })} className="sr-only peer" />
+                  <div className="w-10 h-5 rounded-full border border-gold-200 bg-gold-50 peer-checked:bg-[#c8a951] peer-checked:border-[#c8a951] transition-all" />
+                  <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-all peer-checked:translate-x-5" />
+                </div>
+                <span className="text-sm font-body text-foreground/80">Active</span>
+              </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input type="checkbox" checked={form.is_featured} onChange={(e) => setForm({ ...form, is_featured: e.target.checked })} className="sr-only peer" />
+                  <div className="w-10 h-5 rounded-full border border-gold-200 bg-gold-50 peer-checked:bg-[#c8a951] peer-checked:border-[#c8a951] transition-all" />
+                  <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-all peer-checked:translate-x-5" />
+                </div>
+                <span className="text-sm font-body text-foreground/80">Featured</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="h-px bg-gold-100" />
+
+          {/* Description */}
+          <div>
+            <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500 mb-3">Details</p>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-1.5">Description</label>
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full border border-gold-200/40 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] resize-none rounded-lg transition-colors" />
+              </div>
+              <div>
+                <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-1.5">How to Use</label>
+                <textarea value={form.how_to_use} onChange={(e) => setForm({ ...form, how_to_use: e.target.value })} rows={3} className="w-full border border-gold-200/40 bg-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] resize-none rounded-lg transition-colors" />
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-gold-100" />
+
+          {/* Ingredients */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className="text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70">Ingredients</label>
-              <button type="button" onClick={() => setIngredients([...ingredients, { name: '', description: '' }])} className="text-xs text-foreground hover:underline cursor-pointer">+ Add</button>
+              <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500">Ingredients</p>
+              <button type="button" onClick={() => setIngredients([...ingredients, { name: '', description: '' }])} className="text-xs text-[#c8a951] font-medium hover:underline cursor-pointer">+ Add</button>
             </div>
             <div className="space-y-2">
               {ingredients.map((ing, i) => (
                 <div key={i} className="flex gap-2 items-center">
-                  <input value={ing.name} onChange={(e) => { const n = [...ingredients]; n[i].name = e.target.value; setIngredients(n); }} placeholder="Ingredient name" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none" />
-                  <input value={ing.description} onChange={(e) => { const n = [...ingredients]; n[i].description = e.target.value; setIngredients(n); }} placeholder="Benefit" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none" />
-                  <button onClick={() => setIngredients(ingredients.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 px-1 cursor-pointer text-lg leading-none">&times;</button>
+                  <input value={ing.name} onChange={(e) => { const n = [...ingredients]; n[i].name = e.target.value; setIngredients(n); }} placeholder="Ingredient name" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
+                  <input value={ing.description} onChange={(e) => { const n = [...ingredients]; n[i].description = e.target.value; setIngredients(n); }} placeholder="Benefit" className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg" />
+                  <button onClick={() => setIngredients(ingredients.filter((_, j) => j !== i))} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-red-400 cursor-pointer text-lg leading-none flex-shrink-0">&times;</button>
                 </div>
               ))}
+              {ingredients.length === 0 && <p className="text-xs text-muted py-1">No ingredients added</p>}
             </div>
           </div>
 
+          <div className="h-px bg-gold-100" />
+
+          {/* Images */}
           <div>
-            <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-foreground/70 mb-2">Images</label>
+            <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500 mb-3">Images</p>
             {editing?.images?.length > 0 && (
               <div className="flex gap-2 mb-3 flex-wrap">
                 {editing.images.map((img: any) => (
-                  <div key={img.id} className="relative group">
+                  <div key={img.id} className="relative group rounded-lg overflow-hidden">
                     <Image src={img.image_url} alt="" width={56} height={56} className="w-14 h-14 object-cover" />
                     <button onClick={async () => {
                       await supabase.from('product_images').delete().eq('id', img.id);
                       setEditing({ ...editing, images: editing.images.filter((i: any) => i.id !== img.id) });
                       toast.success('Image removed');
-                    }} className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">&times;</button>
+                    }} className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">&times;</button>
                   </div>
                 ))}
               </div>
             )}
-            <label className="flex items-center gap-2 px-4 py-3 border border-dashed border-gold-300 cursor-pointer hover:border-foreground transition-colors">
-              <Upload size={15} className="text-muted" />
+            <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gold-200 rounded-xl cursor-pointer hover:border-[#c8a951] transition-colors bg-gold-50/30">
+              <Upload size={16} className="text-muted" />
               <span className="text-sm text-muted">{imageFiles.length > 0 ? `${imageFiles.length} file(s) selected` : 'Upload images'}</span>
               <input type="file" multiple accept="image/*" onChange={(e) => setImageFiles(Array.from(e.target.files || []))} className="hidden" />
             </label>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gold-100">
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-2">
             <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
             <Button onClick={handleSave} loading={saving}>{editing ? 'Update' : 'Create'}</Button>
           </div>

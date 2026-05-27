@@ -1,4 +1,5 @@
 import HeroSection from '@/components/home/HeroSection';
+import HomeBundles from '@/components/home/HomeBundles';
 import RitualSteps from '@/components/home/RitualSteps';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import BundlePromo from '@/components/home/BundlePromo';
@@ -17,6 +18,7 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <HomeBundles />
       <GoldDivider />
       <RitualSteps />
       <FeaturedProducts />

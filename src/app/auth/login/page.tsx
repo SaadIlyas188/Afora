@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { createClient } from '@/lib/supabase/client';
 import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { motion } from 'framer-motion';
@@ -22,10 +23,26 @@ export default function LoginPage() {
     const { error } = await signIn(email, password);
     if (error) {
       toast.error(error);
-    } else {
-      toast.success('Welcome back!');
-      router.push('/account');
+      setLoading(false);
+      return;
     }
+    // Check if the user is an admin and redirect accordingly
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+      if (profile?.role === 'admin') {
+        toast.success('Welcome back!');
+        router.push('/admin');
+        return;
+      }
+    }
+    toast.success('Welcome back!');
+    router.push('/account');
     setLoading(false);
   };
 

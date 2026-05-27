@@ -32,33 +32,38 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
           />
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
-            transition={{ type: 'spring', duration: 0.35, bounce: 0.1 }}
-            className={`relative ${maxWidth} w-full bg-white shadow-xl flex flex-col max-h-[90vh] sm:max-h-[85vh] rounded-t-2xl sm:rounded-none`}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ type: 'spring', duration: 0.4, bounce: 0.08 }}
+            className={`relative ${maxWidth} w-full bg-white shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] rounded-t-3xl sm:rounded-2xl overflow-hidden`}
           >
+            {/* Drag handle on mobile */}
+            <div className="flex justify-center pt-3 pb-1 sm:hidden flex-shrink-0">
+              <div className="w-10 h-1 rounded-full bg-gold-200" />
+            </div>
+
             {title && (
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gold-100 flex-shrink-0">
-                <h3 className="text-base font-heading font-medium tracking-wide">{title}</h3>
-                <button onClick={onClose} className="p-1.5 hover:bg-gold-50 transition-colors cursor-pointer">
-                  <X size={18} className="text-muted" />
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gold-100 flex-shrink-0">
+                <h3 className="text-[15px] font-heading font-medium tracking-wide text-foreground">{title}</h3>
+                <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gold-50 transition-colors cursor-pointer">
+                  <X size={16} className="text-muted" />
                 </button>
               </div>
             )}
             {!title && (
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-1.5 hover:bg-gold-50 transition-colors z-10 cursor-pointer"
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gold-50 transition-colors z-10 cursor-pointer"
               >
-                <X size={18} className="text-muted" />
+                <X size={16} className="text-muted" />
               </button>
             )}
-            <div className="overflow-y-auto flex-1 p-5">
+            <div className="overflow-y-auto flex-1 px-6 py-5">
               {children}
             </div>
           </motion.div>
