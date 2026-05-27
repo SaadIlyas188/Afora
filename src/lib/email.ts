@@ -6,8 +6,8 @@ const CONTACT_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CONTACT!;
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 interface OrderEmailParams {
-  to_email: string;
-  to_name: string;
+  email: string;
+  name: string;
   order_number: string;
   order_date: string;
   items_html: string;

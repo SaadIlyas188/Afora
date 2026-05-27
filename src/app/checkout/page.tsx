@@ -207,8 +207,8 @@ export default function CheckoutPage() {
     );
 
     sendOrderConfirmation({
-      to_email: form.email,
-      to_name: `${form.first_name} ${form.last_name}`,
+      email: form.email,
+      name: `${form.first_name} ${form.last_name}`,
       order_number: orderNumber,
       order_date: new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' }),
       items_html: itemsHtml,
