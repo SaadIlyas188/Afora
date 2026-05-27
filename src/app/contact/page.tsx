@@ -13,6 +13,7 @@ export default function ContactPage() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [loading, setLoading] = useState(false);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -22,6 +23,7 @@ export default function ContactPage() {
         data.forEach((d) => (s[d.key] = d.value));
         setSettings(s);
       }
+      setSettingsLoaded(true);
     });
   }, []);
 
@@ -78,23 +80,37 @@ export default function ContactPage() {
           <div className="space-y-10">
             <div>
               <h2 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-muted mb-6">Connect With Us</h2>
-              <div className="space-y-4">
-                {socials.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-3 border border-gold-200/40 hover:border-gold-300 transition-colors group"
-                  >
-                    <s.icon size={16} strokeWidth={1.5} className="text-muted group-hover:text-foreground transition-colors" />
-                    <div>
-                      <p className="text-sm font-body font-medium">{s.label}</p>
-                      <p className="text-xs font-body text-muted font-light">{s.value}</p>
+              {!settingsLoaded ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-4 p-3 border border-gold-200/40 animate-pulse">
+                      <div className="w-4 h-4 rounded bg-gold-100" />
+                      <div className="space-y-1.5">
+                        <div className="h-3 w-20 rounded bg-gold-100" />
+                        <div className="h-2.5 w-32 rounded bg-gold-50" />
+                      </div>
                     </div>
-                  </a>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {socials.map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-3 border border-gold-200/40 hover:border-gold-300 transition-colors group"
+                    >
+                      <s.icon size={16} strokeWidth={1.5} className="text-muted group-hover:text-foreground transition-colors" />
+                      <div>
+                        <p className="text-sm font-body font-medium">{s.label}</p>
+                        <p className="text-xs font-body text-muted font-light">{s.value}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="border-t border-gold-200/40 pt-8">

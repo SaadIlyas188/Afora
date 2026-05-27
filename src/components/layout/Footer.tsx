@@ -28,13 +28,13 @@ export default function Footer() {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <footer className="bg-foreground text-gold-50 mt-auto mb-14 md:mb-0">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16">
+    <footer className="bg-foreground text-gold-50 mt-auto mb-16 md:mb-0">
+      <div className="max-w-[1400px] mx-auto px-5 md:px-12 py-8 md:py-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-16">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="inline-block mb-5">
-              <span className="text-2xl font-heading font-light tracking-[0.25em] text-gold-50">
+          <div className="col-span-2 md:col-span-1 mb-2 md:mb-0">
+            <Link href="/" className="inline-block mb-3">
+              <span className="text-xl md:text-2xl font-heading font-light tracking-[0.25em] text-gold-50">
                 AFORA
               </span>
               <br />
@@ -42,15 +42,15 @@ export default function Footer() {
                 by Sidra Shahzad
               </span>
             </Link>
-            <p className="text-sm text-gold-400 leading-relaxed font-body font-light">
+            <p className="text-xs md:text-sm text-gold-400 leading-relaxed font-body font-light">
               A new era of luxury skincare.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-gold-300 mb-5">Quick Links</h4>
-            <ul className="space-y-3">
+            <h4 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-gold-300 mb-3 md:mb-5">Quick Links</h4>
+            <ul className="space-y-2 md:space-y-3">
               {[
                 { label: 'Shop All', href: '/products' },
                 { label: 'The Ritual', href: '/bundle' },
@@ -58,7 +58,7 @@ export default function Footer() {
                 { label: 'FAQ', href: '/faq' },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm font-body text-gold-400 hover:text-gold-50 transition-colors font-light">
+                  <Link href={link.href} className="text-xs md:text-sm font-body text-gold-400 hover:text-gold-50 transition-colors font-light">
                     {link.label}
                   </Link>
                 </li>
@@ -68,8 +68,8 @@ export default function Footer() {
 
           {/* Customer Service */}
           <div>
-            <h4 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-gold-300 mb-5">Help</h4>
-            <ul className="space-y-3">
+            <h4 className="text-[10px] font-body font-medium tracking-[0.2em] uppercase text-gold-300 mb-3 md:mb-5">Help</h4>
+            <ul className="space-y-2 md:space-y-3">
               {[
                 { label: 'Contact Us', href: '/contact' },
                 { label: 'Track Order', href: '/account/orders' },
@@ -77,7 +77,7 @@ export default function Footer() {
                 { label: 'Returns', href: '/faq' },
               ].map((link, i) => (
                 <li key={i}>
-                  <Link href={link.href} className="text-sm font-body text-gold-400 hover:text-gold-50 transition-colors font-light">
+                  <Link href={link.href} className="text-xs md:text-sm font-body text-gold-400 hover:text-gold-50 transition-colors font-light">
                     {link.label}
                   </Link>
                 </li>
@@ -114,7 +114,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-6 border-t border-gold-800 flex flex-col md:flex-row justify-between items-center gap-2">
+        <div className="mt-8 md:mt-14 pt-5 border-t border-gold-800 flex flex-col md:flex-row justify-between items-center gap-1.5">
           <p className="text-[10px] font-body text-gold-600 tracking-wide">
             &copy; {new Date().getFullYear()} AFORA by Sidra Shahzad
           </p>

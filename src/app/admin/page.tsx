@@ -18,6 +18,7 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({ totalOrders: 0, totalRevenue: 0, totalUsers: 0, totalProducts: 0, pendingOrders: 0, todayOrders: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
@@ -40,6 +41,7 @@ export default function AdminDashboard() {
         pendingOrders: pending,
         todayOrders: todayO,
       });
+      setLoading(false);
     });
 
     supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(5).then(({ data }) => {
@@ -61,19 +63,32 @@ export default function AdminDashboard() {
       <h1 className="text-2xl font-light tracking-wide font-heading mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        {cards.map((card, i) => (
-          <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-4 md:p-5 shadow-sm border border-gold-50">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center ${card.color}`}>
-                <card.icon size={18} />
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white p-4 md:p-5 shadow-sm border border-gold-50 animate-pulse">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gold-50" />
+                  <div className="space-y-2">
+                    <div className="h-2.5 w-20 rounded bg-gold-50" />
+                    <div className="h-4 w-16 rounded bg-gold-100" />
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-muted">{card.label}</p>
-                <p className="text-lg font-bold">{card.value}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            ))
+          : cards.map((card, i) => (
+              <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-4 md:p-5 shadow-sm border border-gold-50">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center ${card.color}`}>
+                    <card.icon size={18} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted">{card.label}</p>
+                    <p className="text-lg font-bold">{card.value}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))
+        }
       </div>
 
       {/* Recent Orders */}

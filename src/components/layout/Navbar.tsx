@@ -210,6 +210,13 @@ export default function Navbar() {
                 </nav>
                 <div className="pt-6 border-t border-gold-200/50 space-y-1">
                   <Link
+                    href="/account/wishlist"
+                    className="flex items-center gap-3 py-3 text-[11px] font-body font-medium tracking-[0.15em] uppercase text-muted hover:text-foreground"
+                  >
+                    <Heart size={16} strokeWidth={1.5} />
+                    Wishlist{wishlistItems.length > 0 && <span className="ml-auto text-[10px] bg-foreground text-gold-50 rounded-full w-4 h-4 flex items-center justify-center">{wishlistItems.length}</span>}
+                  </Link>
+                  <Link
                     href={user ? '/account' : '/auth/login'}
                     className="flex items-center gap-3 py-3 text-[11px] font-body font-medium tracking-[0.15em] uppercase text-muted hover:text-foreground"
                   >

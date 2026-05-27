@@ -57,7 +57,7 @@ export default function RootLayout({
               <Footer />
               <MobileNav />
               <Toaster
-                position="top-right"
+                position="bottom-center"
                 toastOptions={{
                   style: {
                     background: '#faf8f4',

@@ -51,6 +51,31 @@ export default function CheckoutPage() {
         postal_code: prev.postal_code || profile.postal_code || '',
       }));
     }
+    // Fallback: auto-fill from most recent order if fields still empty
+    if (user) {
+      const supabase = createClient();
+      supabase
+        .from('orders')
+        .select('first_name,last_name,email,phone,address,city,postal_code')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+        .then(({ data }) => {
+          if (data) {
+            setForm((prev) => ({
+              first_name: prev.first_name || data.first_name || '',
+              last_name: prev.last_name || data.last_name || '',
+              email: prev.email || data.email || '',
+              phone: prev.phone || data.phone || '',
+              address: prev.address || data.address || '',
+              city: prev.city || data.city || 'Lahore',
+              postal_code: prev.postal_code || data.postal_code || '',
+              notes: prev.notes,
+            }));
+          }
+        });
+    }
   }, [profile, user]);
 
   const handleChange = (field: string, value: string) => {
