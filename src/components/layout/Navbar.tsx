@@ -67,10 +67,10 @@ export default function Navbar() {
 
             {/* Center: Logo */}
             <Link href="/" className="flex flex-col items-center group">
-              <span className="text-[28px] font-heading font-semibold tracking-[0.25em] transition-all duration-300" style={{ color: '#c8a951' }}>
+              <span className="text-[28px] font-heading font-semibold tracking-[0.25em] text-foreground transition-all duration-300">
                 AFORA
               </span>
-              <span className="text-[13px] -mt-0.5 font-light" style={{ fontFamily: 'var(--font-handwriting)', color: '#a8906a' }}>
+              <span className="text-[9px] font-heading tracking-[0.2em] text-muted -mt-1 font-light">
                 by Sidra Shahzad
               </span>
             </Link>
@@ -133,10 +133,10 @@ export default function Navbar() {
             <Menu size={20} strokeWidth={1.5} className="text-foreground" />
           </button>
           <Link href="/" className="flex flex-col items-center">
-            <span className="text-lg font-heading font-semibold tracking-[0.25em]" style={{ color: '#c8a951' }}>
+            <span className="text-lg font-heading font-semibold tracking-[0.25em] text-foreground">
               AFORA
             </span>
-            <span className="text-[11px] -mt-0.5" style={{ fontFamily: 'var(--font-handwriting)', color: '#a8906a' }}>
+            <span className="text-[7px] font-heading tracking-[0.2em] text-muted -mt-0.5 font-light">
               by Sidra Shahzad
             </span>
           </Link>
@@ -172,8 +172,8 @@ export default function Navbar() {
               <div className="p-8 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-12">
                   <div className="flex flex-col">
-                    <span className="text-xl font-heading font-semibold tracking-[0.25em]" style={{ color: '#c8a951' }}>AFORA</span>
-                    <span className="text-[13px]" style={{ fontFamily: 'var(--font-handwriting)', color: '#a8906a' }}>by Sidra Shahzad</span>
+                    <span className="text-xl font-heading font-semibold tracking-[0.25em] text-foreground">AFORA</span>
+                    <span className="text-[8px] font-heading tracking-[0.2em] text-muted font-light">by Sidra Shahzad</span>
                   </div>
                   <button onClick={() => setMobileMenuOpen(false)} className="p-1 cursor-pointer">
                     <X size={20} strokeWidth={1.5} />
