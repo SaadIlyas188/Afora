@@ -230,9 +230,9 @@ export default function ProductDetailPage() {
             <p className="font-body text-muted font-light text-sm md:text-base leading-relaxed mb-6">{product.description}</p>
 
             {/* How to Use */}
-            <div className="border border-gold-200/40 p-4 md:p-5 mb-6">
-              <h3 className="text-sm font-heading font-light tracking-wide mb-2">How to Use</h3>
-              <p className="font-body text-muted font-light text-sm">{product.how_to_use}</p>
+            <div className="bg-[#f5f0e8] border-l-2 border-[#c8a951] px-4 md:px-5 py-4 mb-6">
+              <h3 className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-[#c8a951] mb-1.5">How to Use</h3>
+              <p className="font-body text-foreground/70 font-light text-sm leading-relaxed">{product.how_to_use}</p>
             </div>
 
             {product.can_use_individually && (
@@ -270,7 +270,10 @@ export default function ProductDetailPage() {
             {/* Ingredients Accordion */}
             {ingredients.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-lg font-heading font-light tracking-wide mb-3">Ingredients</h3>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="w-5 h-px bg-[#c8a951]" />
+                  <h3 className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-muted">Key Ingredients</h3>
+                </div>
                 <Accordion
                   allowMultiple
                   items={ingredients.map((ing) => ({
@@ -284,7 +287,7 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Reviews Section */}
-        <AnimatedSection className="mt-16 md:mt-24">
+        <AnimatedSection className="mt-12 md:mt-20 bg-[#faf8f4] -mx-6 md:-mx-12 px-6 md:px-12 py-10 md:py-16">
           <div className="mb-8">
             <div className="w-8 h-px bg-gold-300 mb-3" />
             <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-2">Feedback</p>

@@ -50,12 +50,12 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
-    { icon: DollarSign, label: 'Total Revenue', value: formatPrice(stats.totalRevenue), color: 'text-green-500' },
-    { icon: ShoppingCart, label: 'Total Orders', value: stats.totalOrders, color: 'text-blue-500' },
-    { icon: Clock, label: 'Pending Orders', value: stats.pendingOrders, color: 'text-yellow-500' },
-    { icon: TrendingUp, label: 'Today\'s Orders', value: stats.todayOrders, color: 'text-purple-500' },
-    { icon: Users, label: 'Customers', value: stats.totalUsers, color: 'text-indigo-500' },
-    { icon: Package, label: 'Products', value: stats.totalProducts, color: 'text-foreground' },
+    { icon: DollarSign, label: 'Total Revenue', value: formatPrice(stats.totalRevenue) },
+    { icon: ShoppingCart, label: 'Total Orders', value: stats.totalOrders },
+    { icon: Clock, label: 'Pending Orders', value: stats.pendingOrders },
+    { icon: TrendingUp, label: 'Today\'s Orders', value: stats.todayOrders },
+    { icon: Users, label: 'Customers', value: stats.totalUsers },
+    { icon: Package, label: 'Products', value: stats.totalProducts },
   ];
 
   return (
@@ -78,12 +78,12 @@ export default function AdminDashboard() {
           : cards.map((card, i) => (
               <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-4 md:p-5 shadow-sm border border-gold-50">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center ${card.color}`}>
-                    <card.icon size={18} />
+                  <div className="w-10 h-10 rounded-lg bg-cream-100 flex items-center justify-center text-foreground/60">
+                    <card.icon size={18} strokeWidth={1.5} />
                   </div>
                   <div>
                     <p className="text-xs text-muted">{card.label}</p>
-                    <p className="text-lg font-bold">{card.value}</p>
+                    <p className="text-lg font-semibold text-foreground">{card.value}</p>
                   </div>
                 </div>
               </motion.div>

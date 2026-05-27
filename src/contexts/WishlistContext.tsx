@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 interface WishlistContextType {
   items: WishlistItem[];
+  localIds: string[];
   loading: boolean;
   isInWishlist: (productId: string) => boolean;
   toggleWishlist: (productId: string, productName?: string) => Promise<void>;
@@ -114,7 +115,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <WishlistContext.Provider value={{ items, loading, isInWishlist, toggleWishlist }}>
+    <WishlistContext.Provider value={{ items, localIds: localWishlist, loading, isInWishlist, toggleWishlist }}>
       {children}
     </WishlistContext.Provider>
   );

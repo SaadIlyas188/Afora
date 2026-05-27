@@ -72,7 +72,7 @@ export default function Footer() {
             <ul className="space-y-2 md:space-y-3">
               {[
                 { label: 'Contact Us', href: '/contact' },
-                { label: 'Track Order', href: '/account/orders' },
+                { label: 'Track Order', href: '/track' },
                 { label: 'Shipping Info', href: '/faq' },
                 { label: 'Returns', href: '/faq' },
               ].map((link, i) => (

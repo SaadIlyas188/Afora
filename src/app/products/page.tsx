@@ -43,15 +43,15 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen pb-20 md:pb-0">
       {/* Hero */}
-      <section className="py-20 md:py-28 text-center px-6 md:px-12">
+      <section className="py-8 md:py-24 text-center px-6 md:px-12">
         <AnimatedSection>
-          <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="hidden md:flex items-center justify-center gap-4 mb-8">
             <div className="w-8 h-px bg-gold-300" />
             <span className="text-[10px] md:text-[11px] font-body tracking-[0.3em] uppercase text-muted">Our Collection</span>
             <div className="w-8 h-px bg-gold-300" />
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-light text-foreground tracking-wide mb-4">Shop</h1>
-          <p className="text-sm md:text-base font-body text-muted font-light max-w-lg mx-auto">
+          <h1 className="text-2xl md:text-6xl lg:text-7xl font-heading font-light text-foreground tracking-wide mb-1 md:mb-4">Shop</h1>
+          <p className="hidden md:block text-sm md:text-base font-body text-muted font-light max-w-lg mx-auto">
             Discover our expertly crafted skincare essentials for every step of your beauty ritual.
           </p>
         </AnimatedSection>
@@ -59,7 +59,7 @@ export default function ProductsPage() {
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 pb-16">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 mb-6 md:mb-10">
           {/* Category Tabs */}
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 w-full md:w-auto">
             <button

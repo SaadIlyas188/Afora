@@ -69,28 +69,28 @@ export default function BundlePage() {
   return (
     <div className="min-h-screen pb-20 md:pb-0">
       {/* Hero */}
-      <section className="bg-gold-50 py-16 md:py-24 px-6 md:px-12">
+      <section className="bg-[#0f0f0f] py-16 md:py-24 px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <div className="flex flex-col items-center gap-3 mb-8">
-              <div className="w-8 h-px bg-gold-300" />
-              <p className="text-[10px] tracking-[0.3em] uppercase text-muted">Save {formatPrice(savings)}</p>
+              <div className="w-8 h-px bg-[#c8a951]" />
+              <p className="text-[10px] tracking-[0.3em] uppercase text-[#c8a951]/80 font-body">Save {formatPrice(savings)}</p>
             </div>
-            <h1 className="text-3xl md:text-6xl font-light tracking-wide font-heading text-foreground mb-4">
+            <h1 className="text-3xl md:text-6xl font-light tracking-wide font-heading text-gold-50 mb-4">
               {bundle.name}
             </h1>
-            <p className="text-sm md:text-lg font-body text-muted font-light max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-sm md:text-lg font-body text-gold-400 font-light max-w-2xl mx-auto mb-8 leading-relaxed">
               {bundle.description}
             </p>
             <div className="flex items-center justify-center gap-6 mb-8">
               <div className="text-center">
-                <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1">Bundle Price</p>
-                <p className="text-3xl md:text-4xl font-light tracking-wide text-foreground">{formatPrice(bundle.price)}</p>
+                <p className="text-[10px] tracking-[0.3em] uppercase text-[#c8a951]/70 mb-1 font-body">Bundle Price</p>
+                <p className="text-3xl md:text-4xl font-light tracking-wide text-gold-50">{formatPrice(bundle.price)}</p>
               </div>
               {bundle.compare_at_price && (
                 <div className="text-center">
-                  <p className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1">Individual Total</p>
-                  <p className="text-xl text-muted line-through">{formatPrice(bundle.compare_at_price)}</p>
+                  <p className="text-[10px] tracking-[0.3em] uppercase text-[#c8a951]/70 mb-1 font-body">You Save</p>
+                  <p className="text-xl text-[#c8a951] font-light">{formatPrice(savings)}</p>
                 </div>
               )}
             </div>
@@ -119,6 +119,7 @@ export default function BundlePage() {
           {products.map((product, index) => {
             const primaryImage = product.images?.find((i) => i.is_primary) || product.images?.[0];
             const isEven = index % 2 === 0;
+            const isLast = index === products.length - 1;
 
             return (
               <motion.div
@@ -144,7 +145,7 @@ export default function BundlePage() {
                   </div>
 
                   {/* Card */}
-                  <div className="flex-1 pb-6">
+                  <div className={`flex-1 pb-6 rounded-2xl p-3 ${index % 3 === 0 ? 'bg-[#f5f0e8]' : index % 3 === 1 ? 'bg-white border border-gold-100' : 'bg-[#faf8f4]'}`}>
                     <div className="flex gap-3 items-start mb-3">
                       {/* Thumbnail */}
                       <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-cream-200 rounded-xl">
@@ -175,7 +176,7 @@ export default function BundlePage() {
 
                     {/* How to use inline */}
                     {product.how_to_use && (
-                      <div className="rounded-lg px-3 py-2 mb-2" style={{ backgroundColor: 'rgba(200,169,81,0.08)' }}>
+                      <div className="rounded-lg px-3 py-2 mb-2 bg-white border-l-2" style={{ borderColor: '#c8a951' }}>
                         <p className="text-[10px] font-body font-medium tracking-[0.1em] uppercase mb-0.5" style={{ color: '#c8a951' }}>How to Use</p>
                         <p className="text-[11px] font-body text-muted font-light leading-relaxed">{product.how_to_use}</p>
                       </div>
@@ -205,12 +206,12 @@ export default function BundlePage() {
                   </div>
                 </div>
 
-                {/* ── Desktop: original alternating layout ── */}
-                <div className={`hidden md:flex ${isEven ? 'flex-row' : 'flex-row-reverse'} gap-12 items-center`}>
+                {/* ── Desktop: alternating layout ── */}
+                <div className={`hidden md:flex ${isEven ? 'flex-row' : 'flex-row-reverse'} gap-12 items-center rounded-2xl p-8 ${isEven ? 'bg-white' : 'bg-[#faf8f4]'}`}>
                   {/* Image */}
                   <div className="w-2/5 relative">
                     <div className="absolute -top-3 -left-3 z-10">
-                      <span className="text-[10px] font-body tracking-[0.15em] text-muted">Step {product.step_number}</span>
+                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full font-body font-semibold text-sm text-white" style={{ backgroundColor: '#c8a951' }}>0{product.step_number}</span>
                     </div>
                     <div className="aspect-square overflow-hidden bg-cream-100">
                       <Image
@@ -225,11 +226,11 @@ export default function BundlePage() {
                   </div>
                   {/* Info */}
                   <div className="w-3/5">
-                    <p className="text-xs text-muted uppercase tracking-wider mb-1">{product.category?.name}</p>
+                    <p className="text-xs text-[#c8a951] uppercase tracking-wider mb-1 font-body font-medium">{product.category?.name}</p>
                     <h3 className="text-xl md:text-2xl font-light tracking-wide font-heading mb-2">{product.name}</h3>
                     <p className="text-sm font-body text-muted font-light leading-relaxed mb-4">{product.description}</p>
-                    <div className="bg-gold-50 p-3 mb-4">
-                      <p className="text-xs font-medium mb-1">How to Use:</p>
+                    <div className="bg-[#f5f0e8] border-l-2 border-[#c8a951] px-4 py-3 mb-4">
+                      <p className="text-[10px] font-body font-semibold tracking-[0.15em] uppercase text-[#c8a951] mb-1">How to Use</p>
                       <p className="text-xs font-body text-muted font-light">{product.how_to_use}</p>
                     </div>
                     {product.ingredients && product.ingredients.length > 0 && (
