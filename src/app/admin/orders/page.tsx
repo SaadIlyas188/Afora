@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { formatPrice, getStatusColor } from '@/lib/utils';
-import { sendStatusUpdate } from '@/lib/email';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { Eye } from 'lucide-react';
@@ -27,12 +26,7 @@ export default function AdminOrdersPage() {
   const updateStatus = async (orderId: string, status: string) => {
     const { error } = await supabase.from('orders').update({ status }).eq('id', orderId);
     if (error) { toast.error(error.message); return; }
-    toast.success(`Order ${status}`);
-    // Send email
-    const order = orders.find(o => o.id === orderId);
-    if (order?.email) {
-      try { await sendStatusUpdate({ to_email: order.email, to_name: order.first_name, order_number: order.order_number, new_status: status, status_message: `Your order has been ${status}` }); } catch {}
-    }
+    toast.success(`Order marked as ${status}`);
     fetchOrders();
     if (selected?.id === orderId) setSelected({ ...selected, status });
   };

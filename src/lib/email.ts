@@ -3,7 +3,6 @@ import emailjs from '@emailjs/browser';
 const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
 const ORDER_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ORDER!;
 const CONTACT_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_CONTACT!;
-const STATUS_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_STATUS!;
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 interface OrderEmailParams {
@@ -29,14 +28,6 @@ interface ContactEmailParams {
   to_email: string;
 }
 
-interface StatusEmailParams {
-  to_email: string;
-  to_name: string;
-  order_number: string;
-  new_status: string;
-  status_message: string;
-}
-
 export async function sendOrderConfirmation(params: OrderEmailParams) {
   try {
     await emailjs.send(SERVICE_ID, ORDER_TEMPLATE, params as unknown as Record<string, unknown>, PUBLIC_KEY);
@@ -53,16 +44,6 @@ export async function sendContactEmail(params: ContactEmailParams) {
     return { success: true };
   } catch (error) {
     console.error('Failed to send contact email:', error);
-    return { success: false, error };
-  }
-}
-
-export async function sendStatusUpdate(params: StatusEmailParams) {
-  try {
-    await emailjs.send(SERVICE_ID, STATUS_TEMPLATE, params as unknown as Record<string, unknown>, PUBLIC_KEY);
-    return { success: true };
-  } catch (error) {
-    console.error('Failed to send status email:', error);
     return { success: false, error };
   }
 }
