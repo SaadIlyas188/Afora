@@ -407,7 +407,7 @@ INSERT INTO public.products (name, slug, description, how_to_use, price, compare
 
 -- Product 1: Clarifying Gel Cleanser
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Base solvent that hydrates and helps dissolve active ingredients for effective delivery into the skin.', 1),
@@ -417,12 +417,12 @@ FROM public.products p,
   ('Mild Cleanser Base', 'A gentle surfactant system that effectively removes dirt and impurities without stripping the skin of its natural oils.', 5),
   ('Phenoxyethanol', 'A gentle preservative that ensures product safety, stability and shelf life without irritating sensitive skin.', 6),
   ('Fragrance', 'A carefully selected blend that provides a luxurious, subtle sensory experience during your skincare ritual.', 7)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'clarifying-gel-cleanser';
 
 -- Product 2: Skin Renewal Exfoliating Cream
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Base solvent that hydrates and helps dissolve active ingredients for optimal absorption.', 1),
@@ -433,12 +433,12 @@ FROM public.products p,
   ('Stearic Acid', 'A natural fatty acid that helps maintain the skin''s protective moisture barrier and improves product texture.', 6),
   ('Phenoxyethanol', 'A gentle preservative ensuring product purity and safety for all skin types.', 7),
   ('Fragrance', 'A refined scent that elevates your skincare experience with a touch of luxury.', 8)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'skin-renewal-exfoliating-cream';
 
 -- Product 3: Brightening Scrub
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Base solvent that provides hydration and helps active ingredients penetrate effectively.', 1),
@@ -450,12 +450,12 @@ FROM public.products p,
   ('Stearic Acid', 'Reinforces the skin''s natural barrier function and contributes to the luxurious cream texture.', 7),
   ('Phenoxyethanol', 'A reliable preservative that maintains product integrity and freshness.', 8),
   ('Fragrance', 'A delicate fragrance that transforms your skincare routine into a spa-like experience.', 9)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'brightening-scrub';
 
 -- Product 4: Glow Polisher
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Pure water base that provides essential hydration and serves as the foundation for active ingredients.', 1),
@@ -468,12 +468,12 @@ FROM public.products p,
   ('Stearic Acid', 'Supports the skin''s moisture barrier and gives the formula its rich, creamy texture.', 8),
   ('Phenoxyethanol', 'Ensures product remains fresh, safe, and effective throughout its shelf life.', 9),
   ('Fragrance', 'An elegant scent that complements the polishing experience with subtle sophistication.', 10)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'glow-polisher';
 
 -- Product 5: Afora Hydra Cream
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Ultra-pure water that forms the hydrating base, ensuring smooth delivery of all active ingredients.', 1),
@@ -486,12 +486,12 @@ FROM public.products p,
   ('Stearic Acid', 'Helps create the cream''s luxurious texture while reinforcing the skin''s natural protective barrier.', 8),
   ('Phenoxyethanol', 'A mild preservative that keeps the formula fresh and safe for daily use.', 9),
   ('Fragrance', 'A refined, calming scent that enhances your hydration ritual with a touch of indulgence.', 10)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'afora-hydra-cream';
 
 -- Product 6: Afora Brightening Mask
 INSERT INTO public.product_ingredients (product_id, ingredient_name, ingredient_description, sort_order)
-SELECT p.id, i.name, i.description, i.sort
+SELECT p.id, v.iname, v.idesc, v.isort
 FROM public.products p,
 (VALUES
   ('Aqua (Water)', 'Purified water base that delivers hydration and helps active brightening agents absorb effectively.', 1),
@@ -504,7 +504,7 @@ FROM public.products p,
   ('Stearic Acid', 'Contributes to the mask''s creamy consistency while supporting the skin''s natural moisture retention.', 8),
   ('Phenoxyethanol', 'A safe, effective preservative that maintains the mask''s quality and performance.', 9),
   ('Fragrance', 'A light, luxurious aroma that transforms your masking session into a rejuvenating spa moment.', 10)
-) AS i(name, description, sort)
+) AS v(iname, idesc, isort)
 WHERE p.slug = 'afora-brightening-mask';
 
 -- Bundle
