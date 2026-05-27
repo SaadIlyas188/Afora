@@ -5,10 +5,12 @@ import { usePathname } from 'next/navigation';
 import { Camera, Globe, MessageCircle, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import type { SiteSettings } from '@/types';
 
 export default function Footer() {
   const pathname = usePathname();
+  const { user } = useAuth();
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export default function Footer() {
             <ul className="space-y-2 md:space-y-3">
               {[
                 { label: 'Contact Us', href: '/contact' },
-                { label: 'Track Order', href: '/track' },
+                { label: 'Track Order', href: user ? '/account/orders' : '/track' },
                 { label: 'Shipping Info', href: '/faq' },
                 { label: 'Returns', href: '/faq' },
               ].map((link, i) => (

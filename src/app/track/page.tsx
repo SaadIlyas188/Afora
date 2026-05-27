@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/utils';
@@ -38,17 +37,16 @@ export default function TrackOrderPage() {
     setError('');
     setOrder(null);
 
-    const supabase = createClient();
-    const { data } = await supabase
-      .from('orders')
-      .select('*, items:order_items(*)')
-      .eq('order_number', orderNumber.trim().toUpperCase())
-      .single();
-
-    if (data) {
-      setOrder(data);
-    } else {
-      setError('No order found with that number. Please check and try again.');
+    try {
+      const res = await fetch(`/api/track-order?order_number=${encodeURIComponent(orderNumber.trim())}`);
+      const json = await res.json();
+      if (res.ok && json.order) {
+        setOrder(json.order);
+      } else {
+        setError('No order found with that number. Please check and try again.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
     }
     setLoading(false);
   };

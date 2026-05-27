@@ -51,56 +51,63 @@ export default function AccountPage() {
   ];
 
   return (
-    <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
+    <div className="min-h-screen max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-12 pb-24 md:pb-12">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading">My Account</h1>
-          <div className="flex items-center gap-3">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5 md:mb-8">
+          <div>
+            <h1 className="text-xl md:text-3xl font-light tracking-wide font-heading">My Account</h1>
+            <p className="text-xs text-muted font-body mt-0.5">{user.email}</p>
+          </div>
+          <div className="flex items-center gap-2">
             {profile?.role === 'admin' && (
               <Link href="/admin">
                 <Button variant="outline" size="sm" className="gap-1.5"><Shield size={14} /> Admin</Button>
               </Link>
             )}
             <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-red-500">
-              <LogOut size={14} /> Sign Out
+              <LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </div>
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-3 gap-3 mb-6 md:mb-10">
           {menuItems.map((item) => (
-            <Link key={item.href} href={item.href} className="border border-gold-200/40 p-5 hover:shadow-md transition-shadow group">
-              <item.icon size={22} className="text-muted mb-2 group-hover:text-foreground transition-colors" />
-              <h3 className="font-medium text-sm mb-0.5">{item.label}</h3>
-              <p className="text-xs text-muted">{item.desc}</p>
+            <Link key={item.href} href={item.href} className="border border-gold-200/40 p-3 md:p-5 hover:shadow-md transition-shadow group text-center md:text-left">
+              <item.icon size={18} className="text-muted mb-1.5 group-hover:text-foreground transition-colors mx-auto md:mx-0" />
+              <h3 className="font-medium text-xs md:text-sm leading-tight">{item.label}</h3>
+              <p className="text-[10px] text-muted hidden md:block mt-0.5">{item.desc}</p>
             </Link>
           ))}
         </div>
 
         {/* Profile Form */}
-        <div className="border border-gold-200/40 p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <User size={18} className="text-muted" />
-            <h2 className="text-lg font-medium">Profile Information</h2>
+        <div className="border border-gold-200/40 p-4 md:p-6">
+          <div className="flex items-center gap-2 mb-4 md:mb-6">
+            <User size={16} className="text-muted" />
+            <h2 className="text-sm md:text-lg font-medium">Profile Information</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <Input label="First Name" value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
             <Input label="Last Name" value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} />
-            <Input label="Email" value={user.email || ''} disabled className="opacity-60" />
+            <div>
+              <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-muted mb-1.5">Email</label>
+              <div className="border border-gold-200/40 bg-cream-50 px-4 py-2.5 text-sm font-body text-foreground/60 truncate">{user.email}</div>
+            </div>
             <Input label="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <div className="md:col-span-2">
               <Input label="Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground/80 mb-1.5">City</label>
+              <label className="block text-[11px] font-body font-medium tracking-[0.1em] uppercase text-muted mb-1.5">City</label>
               <select value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="w-full border border-gold-200/40 bg-white px-4 py-2.5 text-sm">
                 {PAKISTANI_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <Input label="Postal Code" value={form.postal_code} onChange={(e) => setForm({ ...form, postal_code: e.target.value })} />
           </div>
-          <div className="mt-6">
+          <div className="mt-4 md:mt-6">
             <Button onClick={handleSave} loading={saving}>Save Changes</Button>
           </div>
         </div>
