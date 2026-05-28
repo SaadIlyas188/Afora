@@ -24,7 +24,7 @@ export default function AdminPromosPage() {
   const openNew = () => { setEditing(null); setForm({ code: '', discount_type: 'percentage', discount_value: '', min_order_amount: '', max_uses: '', expires_at: '', is_active: true }); setShowModal(true); };
   const openEdit = (p: any) => {
     setEditing(p);
-    setForm({ code: p.code, discount_type: p.discount_type, discount_value: p.discount_value.toString(), min_order_amount: p.min_order_amount?.toString() || '', max_uses: p.max_uses?.toString() || '', expires_at: p.expires_at?.split('T')[0] || '', is_active: p.is_active });
+    setForm({ code: p.code, discount_type: p.discount_type, discount_value: p.discount_amount.toString(), min_order_amount: p.min_order_amount?.toString() || '', max_uses: p.usage_limit?.toString() || '', expires_at: p.expires_at?.split('T')[0] || '', is_active: p.is_active });
     setShowModal(true);
   };
 
@@ -32,9 +32,9 @@ export default function AdminPromosPage() {
     setSaving(true);
     const data = {
       code: form.code.toUpperCase(), discount_type: form.discount_type,
-      discount_value: parseFloat(form.discount_value),
+      discount_amount: parseFloat(form.discount_value),
       min_order_amount: form.min_order_amount ? parseFloat(form.min_order_amount) : null,
-      max_uses: form.max_uses ? parseInt(form.max_uses) : null,
+      usage_limit: form.max_uses ? parseInt(form.max_uses) : null,
       expires_at: form.expires_at || null, is_active: form.is_active,
     };
     if (editing) {
@@ -67,10 +67,10 @@ export default function AdminPromosPage() {
                 <div className="min-w-0">
                   <p className="font-mono font-medium text-sm">{p.code}</p>
                   <p className="text-xs text-muted mt-0.5">
-                    {p.discount_type === 'percentage' ? `${p.discount_value}% off` : `PKR ${p.discount_value} off`}
+                    {p.discount_type === 'percentage' ? `${p.discount_amount}% off` : `PKR ${p.discount_amount} off`}
                     {p.min_order_amount ? ` · min PKR ${p.min_order_amount}` : ''}
                   </p>
-                  <p className="text-xs text-muted">{p.used_count || 0}/{p.max_uses || '∞'} uses{p.expires_at ? ` · exp ${new Date(p.expires_at).toLocaleDateString()}` : ''}</p>
+                  <p className="text-xs text-muted">{p.times_used || 0}/{p.usage_limit || '∞'} uses{p.expires_at ? ` · exp ${new Date(p.expires_at).toLocaleDateString()}` : ''}</p>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <Badge color={p.is_active ? 'green' : 'gray'}>{p.is_active ? 'On' : 'Off'}</Badge>
@@ -100,9 +100,9 @@ export default function AdminPromosPage() {
             {promos.map((p) => (
               <tr key={p.id} className="border-b border-gold-50 last:border-0">
                 <td className="px-4 py-3 font-mono font-medium">{p.code}</td>
-                <td className="px-4 py-3">{p.discount_type === 'percentage' ? `${p.discount_value}%` : `PKR ${p.discount_value}`}</td>
+                <td className="px-4 py-3">{p.discount_type === 'percentage' ? `${p.discount_amount}%` : `PKR ${p.discount_amount}`}</td>
                 <td className="px-4 py-3 text-muted">{p.min_order_amount ? `PKR ${p.min_order_amount}` : '-'}</td>
-                <td className="px-4 py-3 text-muted">{p.used_count || 0}/{p.max_uses || '∞'}</td>
+                <td className="px-4 py-3 text-muted">{p.times_used || 0}/{p.usage_limit || '∞'}</td>
                 <td className="px-4 py-3 text-xs text-muted">{p.expires_at ? new Date(p.expires_at).toLocaleDateString() : '-'}</td>
                 <td className="px-4 py-3 text-center"><Badge color={p.is_active ? 'green' : 'gray'}>{p.is_active ? 'Active' : 'Inactive'}</Badge></td>
                 <td className="px-4 py-3 text-right">

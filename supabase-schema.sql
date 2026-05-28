@@ -50,6 +50,7 @@ CREATE TABLE public.products (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
+  short_description TEXT,
   description TEXT NOT NULL,
   how_to_use TEXT NOT NULL,
   price NUMERIC(10,2) NOT NULL,
@@ -103,6 +104,16 @@ CREATE TABLE public.bundle_products (
   product_id UUID REFERENCES public.products(id) ON DELETE CASCADE NOT NULL,
   sort_order INT DEFAULT 0,
   UNIQUE(bundle_id, product_id)
+);
+
+-- 7b. BUNDLE IMAGES
+CREATE TABLE public.bundle_images (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  bundle_id UUID REFERENCES public.bundles(id) ON DELETE CASCADE NOT NULL,
+  image_url TEXT NOT NULL,
+  alt_text TEXT,
+  is_primary BOOLEAN DEFAULT false,
+  sort_order INT DEFAULT 0
 );
 
 -- 8. PROMO CODES (created before orders so the FK reference works)
@@ -209,6 +220,7 @@ ALTER TABLE public.product_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_ingredients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bundles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bundle_products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.bundle_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
@@ -255,6 +267,12 @@ CREATE POLICY "Admin can manage bundles" ON public.bundles FOR ALL USING (
 -- BUNDLE PRODUCTS
 CREATE POLICY "Bundle products viewable by everyone" ON public.bundle_products FOR SELECT USING (true);
 CREATE POLICY "Admin can manage bundle products" ON public.bundle_products FOR ALL USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE user_id = auth.uid() AND role = 'admin')
+);
+
+-- BUNDLE IMAGES
+CREATE POLICY "Bundle images viewable by everyone" ON public.bundle_images FOR SELECT USING (true);
+CREATE POLICY "Admin can manage bundle images" ON public.bundle_images FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles WHERE user_id = auth.uid() AND role = 'admin')
 );
 

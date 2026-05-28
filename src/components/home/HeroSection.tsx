@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[60vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gold-50">
+    <section className="relative min-h-[60vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gold-50 pb-8 md:pb-0">
       {/* Background — no harsh split, just elegant depth */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Soft central radial warmth */}
@@ -27,13 +27,13 @@ export default function HeroSection() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.8, delay: 0.6 }}
-          className="absolute bottom-20 left-6 md:bottom-14 md:left-10 w-10 h-10 md:w-16 md:h-16 border-l border-b border-gold-400/35"
+          className="absolute bottom-5 left-6 md:bottom-14 md:left-10 w-10 h-10 md:w-16 md:h-16 border-l border-b border-gold-400/35"
         />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.8, delay: 0.6 }}
-          className="absolute bottom-20 right-6 md:bottom-14 md:right-10 w-10 h-10 md:w-16 md:h-16 border-r border-b border-gold-400/35"
+          className="absolute bottom-5 right-6 md:bottom-14 md:right-10 w-10 h-10 md:w-16 md:h-16 border-r border-b border-gold-400/35"
         />
         {/* Slim vertical accent lines — desktop only */}
         <motion.div
