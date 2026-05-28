@@ -46,14 +46,14 @@ export default function FeaturedProducts() {
           </p>
         </AnimatedSection>
 
-        {/* Mobile: horizontal snap scroll — first card centered, next card peeks */}
-        <div className="md:hidden">
+        {/* Mobile: horizontal snap scroll — first card slightly left of center, next card peeks right */}
+        <div className="md:hidden -mx-6">
           <div
             className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar"
             style={{
-              paddingLeft: 'calc((100vw - 58vw) / 2)',
+              paddingLeft: 'calc((100vw - 58vw) / 2 - 2rem)',
               paddingRight: 'calc((100vw - 58vw) / 2)',
-              scrollPaddingLeft: 'calc((100vw - 58vw) / 2)',
+              scrollPaddingLeft: 'calc((100vw - 58vw) / 2 - 2rem)',
             }}
           >
             {loading

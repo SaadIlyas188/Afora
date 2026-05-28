@@ -60,6 +60,16 @@ export interface Bundle {
   is_active: boolean;
   created_at: string;
   products?: Product[];
+  images?: BundleImage[];
+}
+
+export interface BundleImage {
+  id: string;
+  bundle_id: string;
+  image_url: string;
+  alt_text: string | null;
+  is_primary: boolean;
+  sort_order: number;
 }
 
 export interface BundleProduct {

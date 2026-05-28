@@ -183,6 +183,39 @@ export default function BundlePage() {
         )}
       </section>
 
+      {/* Bundle Image Gallery — shown when bundle has an image, between hero and steps */}
+      <AnimatePresence mode="wait">
+        {bundle.image_url && (
+          <motion.div
+            key={`gallery-${bundle.id}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-[#f5ede0]"
+          >
+            <div className="max-w-[1400px] mx-auto px-4 md:px-12 py-6 md:py-10">
+              <div className="relative overflow-hidden rounded-xl md:rounded-2xl" style={{ aspectRatio: '16 / 7' }}>
+                <Image
+                  src={getImageUrl(bundle.image_url)}
+                  alt={bundle.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {/* Subtle luxury overlay — stronger gradient to protect caption readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/55" />
+                <div className="absolute bottom-3 left-3 md:bottom-4 md:left-5">
+                  <p className="inline-block text-[7px] font-body tracking-[0.18em] uppercase text-white/75 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded">
+                    {bundle.name}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Steps Breakdown */}
       <AnimatePresence mode="wait">
         <motion.section

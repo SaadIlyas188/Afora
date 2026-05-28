@@ -20,7 +20,7 @@ export default function BrandPromise() {
   return (
     <section
       ref={ref}
-      className="py-10 md:py-20 px-4 md:px-12 border-t border-gold-200/40"
+      className="py-10 md:py-20 px-4 md:px-12"
       style={{ background: 'linear-gradient(to bottom, #faf8f4, #f7f3eb)' }}
     >
       <div className="max-w-[1400px] mx-auto">

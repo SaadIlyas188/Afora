@@ -6,8 +6,18 @@ import Button from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Edit2, Trash2, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2, ImagePlus, X, Star } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface BundleImageEntry {
+  id?: string;
+  url: string;
+  file?: File;
+  is_primary: boolean;
+  alt_text: string;
+  sort_order: number;
+  markedForDelete?: boolean;
+}
 
 export default function AdminBundlesPage() {
   const supabase = createClient();
@@ -17,6 +27,7 @@ export default function AdminBundlesPage() {
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ name: '', slug: '', description: '', price: '', compare_at_price: '', is_active: true });
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [bundleImages, setBundleImages] = useState<BundleImageEntry[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -30,12 +41,80 @@ export default function AdminBundlesPage() {
     supabase.from('products').select('id, name').order('step_number').then(({ data }) => { if (data) setProducts(data); });
   }, []);
 
-  const openNew = () => { setEditing(null); setForm({ name: '', slug: '', description: '', price: '', compare_at_price: '', is_active: true }); setSelectedProducts([]); setShowModal(true); };
-  const openEdit = (b: any) => {
+  const openNew = () => { setEditing(null); setForm({ name: '', slug: '', description: '', price: '', compare_at_price: '', is_active: true }); setSelectedProducts([]); setBundleImages([]); setShowModal(true); };
+  const openEdit = async (b: any) => {
     setEditing(b);
     setForm({ name: b.name, slug: b.slug, description: b.description || '', price: b.price.toString(), compare_at_price: b.compare_at_price?.toString() || '', is_active: b.is_active });
     setSelectedProducts(b.bundle_products?.map((bp: any) => bp.product_id) || []);
+    setBundleImages([]);
+    const { data } = await supabase.from('bundle_images').select('*').eq('bundle_id', b.id).order('sort_order');
+    setBundleImages((data || []).map((img: any) => ({ id: img.id, url: img.image_url, is_primary: img.is_primary, alt_text: img.alt_text || '', sort_order: img.sort_order })));
     setShowModal(true);
+  };
+
+  const handleImageFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const activeCount = bundleImages.filter(i => !i.markedForDelete).length;
+    const canAdd = 5 - activeCount;
+    if (canAdd <= 0) { toast.error('Maximum 5 images per bundle'); e.target.value = ''; return; }
+    const newEntries: BundleImageEntry[] = files.slice(0, canAdd).map((file, i) => ({
+      file, url: URL.createObjectURL(file),
+      is_primary: activeCount === 0 && i === 0,
+      alt_text: '', sort_order: activeCount + i,
+    }));
+    setBundleImages(prev => [...prev, ...newEntries]);
+    e.target.value = '';
+  };
+
+  const removeImage = (realIdx: number) => {
+    setBundleImages(prev => {
+      const updated = [...prev];
+      const wasPrimary = updated[realIdx].is_primary;
+      if (updated[realIdx].id) {
+        updated[realIdx] = { ...updated[realIdx], markedForDelete: true, is_primary: false };
+      } else {
+        if (updated[realIdx].url.startsWith('blob:')) URL.revokeObjectURL(updated[realIdx].url);
+        updated.splice(realIdx, 1);
+      }
+      if (wasPrimary) {
+        const firstActive = updated.findIndex(i => !i.markedForDelete);
+        if (firstActive !== -1) updated[firstActive] = { ...updated[firstActive], is_primary: true };
+      }
+      return updated;
+    });
+  };
+
+  const setPrimaryImage = (realIdx: number) => {
+    setBundleImages(prev => prev.map((img, i) => ({ ...img, is_primary: i === realIdx })));
+  };
+
+  const syncBundleImages = async (bundleId: string | undefined) => {
+    if (!bundleId) return;
+    for (const img of bundleImages.filter(i => i.markedForDelete && i.id)) {
+      await supabase.from('bundle_images').delete().eq('id', img.id!);
+    }
+    const active = bundleImages.filter(i => !i.markedForDelete);
+    let primaryUrl: string | null = null;
+    for (let i = 0; i < active.length; i++) {
+      const img = active[i];
+      const isPrimary = img.is_primary || (i === 0 && !active.some(a => a.is_primary));
+      if (img.file) {
+        const ext = img.file.name.split('.').pop() || 'jpg';
+        const path = `bundles/${bundleId}/${Date.now()}-${i}.${ext}`;
+        const { error } = await supabase.storage.from('product-images').upload(path, img.file, { upsert: true });
+        if (error) { toast.error('Upload failed: ' + error.message); continue; }
+        const { data: pubData } = supabase.storage.from('product-images').getPublicUrl(path);
+        const publicUrl = pubData.publicUrl;
+        await supabase.from('bundle_images').insert({ bundle_id: bundleId, image_url: publicUrl, alt_text: img.alt_text || null, is_primary: isPrimary, sort_order: i });
+        if (isPrimary) primaryUrl = publicUrl;
+      } else if (img.id) {
+        await supabase.from('bundle_images').update({ is_primary: isPrimary, alt_text: img.alt_text || null, sort_order: i }).eq('id', img.id);
+        if (isPrimary) primaryUrl = img.url;
+      }
+    }
+    if (active.length > 0) {
+      await supabase.from('bundles').update({ image_url: primaryUrl }).eq('id', bundleId);
+    }
   };
 
   const handleSave = async () => {
@@ -58,11 +137,15 @@ export default function AdminBundlesPage() {
       await supabase.from('bundle_products').insert(selectedProducts.map(pid => ({ bundle_id: bundleId, product_id: pid })));
     }
 
+    await syncBundleImages(bundleId);
+
     toast.success(editing ? 'Updated!' : 'Created!');
     setShowModal(false); fetchBundles(); setSaving(false);
   };
 
   const handleDelete = async (id: string) => { if (!confirm('Delete?')) return; await supabase.from('bundles').delete().eq('id', id); toast.success('Deleted'); fetchBundles(); };
+
+  const activeImages = bundleImages.filter(i => !i.markedForDelete);
 
   return (
     <div>
@@ -142,6 +225,73 @@ export default function AdminBundlesPage() {
             <div className="mt-3">
               <Textarea label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
             </div>
+          </div>
+
+          <div className="h-px bg-gold-100" />
+
+          {/* Images */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500">
+                Images ({activeImages.length}/5)
+              </p>
+              {activeImages.length > 0 && activeImages.length < 5 && (
+                <label className="cursor-pointer flex items-center gap-1 text-[10px] font-body tracking-[0.15em] uppercase hover:opacity-70 transition-opacity" style={{ color: '#c8a951' }}>
+                  <ImagePlus size={11} /> Add More
+                  <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageFiles} />
+                </label>
+              )}
+            </div>
+            {activeImages.length === 0 ? (
+              <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gold-200 rounded-xl p-6 cursor-pointer hover:border-[#c8a951]/60 hover:bg-gold-50/30 transition-colors">
+                <ImagePlus size={24} className="text-muted/40" />
+                <p className="text-sm font-body text-muted/60">Upload up to 5 images</p>
+                <p className="text-[10px] font-body text-muted/40">PNG, JPG, WEBP</p>
+                <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageFiles} />
+              </label>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                {bundleImages.map((img, realIdx) => {
+                  if (img.markedForDelete) return null;
+                  return (
+                    <div key={realIdx} className="relative group">
+                      <div
+                        className={`aspect-square rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                          img.is_primary ? 'border-[#c8a951]' : 'border-gold-200 hover:border-[#c8a951]/50'
+                        }`}
+                        onClick={() => setPrimaryImage(realIdx)}
+                        title="Tap to set as primary"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={img.url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      {img.is_primary && (
+                        <div className="absolute bottom-1 left-1 flex items-center gap-0.5 bg-[#c8a951] text-white rounded px-1.5 py-0.5">
+                          <Star size={7} className="fill-white" />
+                          <span className="text-[7px] font-body font-semibold">Primary</span>
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); removeImage(realIdx); }}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
+                  );
+                })}
+                {activeImages.length < 5 && (
+                  <label className="aspect-square rounded-lg border-2 border-dashed border-gold-200 flex items-center justify-center cursor-pointer hover:border-[#c8a951]/60 hover:bg-gold-50/30 transition-colors">
+                    <Plus size={18} className="text-muted/40" />
+                    <input type="file" accept="image/*" multiple className="sr-only" onChange={handleImageFiles} />
+                  </label>
+                )}
+              </div>
+            )}
+            {activeImages.length > 0 && (
+              <p className="text-[9px] font-body text-muted/50 mt-2">Tap an image to set it as primary · used in store listings</p>
+            )}
           </div>
 
           <div className="h-px bg-gold-100" />

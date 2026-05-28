@@ -6,11 +6,7 @@ import IngredientsSpotlight from '@/components/home/IngredientsSpotlight';
 import BrandPromise from '@/components/home/BrandPromise';
 
 const GoldDivider = () => (
-  <div className="flex items-center justify-center py-2 px-6 md:px-12">
-    <div className="w-full max-w-[1400px]">
-      <div className="h-px w-full" style={{ background: 'linear-gradient(to right, transparent, rgba(200,169,81,0.35), transparent)' }} />
-    </div>
-  </div>
+  <div className="w-full" style={{ height: '2px', backgroundColor: '#c8a951' }} />
 );
 
 export default function Home() {
@@ -22,6 +18,7 @@ export default function Home() {
       <GoldDivider />
       <BundlePromo />
       <IngredientsSpotlight />
+      <GoldDivider />
       <BrandPromise />
     </>
   );

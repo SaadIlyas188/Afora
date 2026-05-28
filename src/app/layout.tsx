@@ -52,7 +52,7 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${outfit.variable} ${greatVibes.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-body">
+      <body className="min-h-full flex flex-col font-body" suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>

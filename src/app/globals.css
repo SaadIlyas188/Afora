@@ -74,6 +74,12 @@ h1, h2, h3, h4, h5, h6 {
   to { clip-path: inset(0 0 0 0); }
 }
 
+/* Bundle marquee — loops left, pause handled via animationPlayState */
+@keyframes marquee-bundles {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 .shimmer-bg {
   background: linear-gradient(90deg, #f0ede6 25%, #f7f4ed 50%, #f0ede6 75%);
   background-size: 200% 100%;
