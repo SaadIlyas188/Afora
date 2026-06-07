@@ -291,7 +291,7 @@ export default function AdminProductsPage() {
           {/* Ingredients */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500">Ingredients</p>
+              <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500">Key Ingredients</p>
               <button type="button" onClick={() => setIngredients([...ingredients, { name: '', description: '' }])} className="text-xs text-[#c8a951] font-medium hover:underline cursor-pointer">+ Add</button>
             </div>
             <div className="space-y-2">
@@ -302,7 +302,7 @@ export default function AdminProductsPage() {
                   <button onClick={() => setIngredients(ingredients.filter((_, j) => j !== i))} className="self-end sm:self-auto w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-red-400 cursor-pointer text-lg leading-none flex-shrink-0">&times;</button>
                 </div>
               ))}
-              {ingredients.length === 0 && <p className="text-xs text-muted py-1">No ingredients added</p>}
+              {ingredients.length === 0 && <p className="text-xs text-muted py-1">No key ingredients added</p>}
             </div>
           </div>
 

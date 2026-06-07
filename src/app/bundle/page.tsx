@@ -298,7 +298,7 @@ export default function BundlePage() {
                       {product.ingredients && product.ingredients.length > 0 && (
                         <Accordion
                           items={[{
-                            title: `Ingredients (${product.ingredients.length})`,
+                            title: `Key Ingredients (${product.ingredients.length})`,
                             content: (
                               <div className="space-y-1.5">
                                 {product.ingredients.sort((a, b) => a.sort_order - b.sort_order).map((ing) => (
@@ -346,7 +346,7 @@ export default function BundlePage() {
                       {product.ingredients && product.ingredients.length > 0 && (
                         <Accordion
                           items={[{
-                            title: `View Ingredients (${product.ingredients.length})`,
+                            title: `View Key Ingredients (${product.ingredients.length})`,
                             content: (
                               <div className="space-y-2">
                                 {product.ingredients.sort((a, b) => a.sort_order - b.sort_order).map((ing) => (
