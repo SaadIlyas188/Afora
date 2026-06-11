@@ -1,7 +1,7 @@
 // Server-only BarqRaftar courier API client
 // Env vars: BARQRAFTAR_API_KEY, BARQRAFTAR_API_SECRET, BARQRAFTAR_FROM_CITY_ID, BARQRAFTAR_PICKUP_ADDRESS_ID
 
-const API_BASE = 'https://barqraftar.pk/api/v1';
+const API_BASE = 'https://barqraftar.pk/public/api/v1';
 
 function getHeaders(): Record<string, string> {
   return {
