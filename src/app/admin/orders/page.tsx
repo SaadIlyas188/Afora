@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { formatPrice, getStatusColor } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import { Eye, Loader2 } from 'lucide-react';
+import { Eye, Loader2, Send, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
 const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
@@ -16,6 +16,8 @@ export default function AdminOrdersPage() {
   const [selected, setSelected] = useState<any | null>(null);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [sendingBR, setSendingBR] = useState<string | null>(null);
+  const [refreshingBR, setRefreshingBR] = useState(false);
 
   const fetchOrders = () => {
     setLoading(true);
@@ -31,6 +33,57 @@ export default function AdminOrdersPage() {
     toast.success(`Order marked as ${status}`);
     fetchOrders();
     if (selected?.id === orderId) setSelected({ ...selected, status });
+  };
+
+  const sendToBarqRaftar = async (orderId: string) => {
+    setSendingBR(orderId);
+    try {
+      const res = await fetch('/api/barqraftar/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        toast.success(`Sent! Tracking: ${data.tracking_number}`);
+        fetchOrders();
+        if (selected?.id === orderId) {
+          setSelected({ ...selected, barqraftar_tracking_number: data.tracking_number, barqraftar_status: 'pending' });
+        }
+      } else {
+        toast.error(data.error || 'Failed to send to BarqRaftar');
+      }
+    } catch {
+      toast.error('Failed to send to BarqRaftar');
+    }
+    setSendingBR(null);
+  };
+
+  const refreshBarqRaftarStatus = async (trackingNumber: string) => {
+    setRefreshingBR(true);
+    try {
+      const res = await fetch(`/api/barqraftar/track?tracking_number=${encodeURIComponent(trackingNumber)}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        // Update local state and DB
+        const brStatus = data.status;
+        const mappedStatus = data.mapped_status;
+        await supabase
+          .from('orders')
+          .update({ barqraftar_status: brStatus, status: mappedStatus })
+          .eq('barqraftar_tracking_number', trackingNumber);
+        toast.success(`Courier: ${data.status_label}`);
+        fetchOrders();
+        if (selected?.barqraftar_tracking_number === trackingNumber) {
+          setSelected({ ...selected, barqraftar_status: brStatus, status: mappedStatus });
+        }
+      } else {
+        toast.error(data.error || 'Could not fetch tracking');
+      }
+    } catch {
+      toast.error('Failed to refresh status');
+    }
+    setRefreshingBR(false);
   };
 
   return (
@@ -58,12 +111,25 @@ export default function AdminOrdersPage() {
                     <p className="font-mono text-xs text-muted">{o.order_number}</p>
                     <p className="font-medium text-sm mt-0.5">{o.first_name} {o.last_name}</p>
                     <p className="text-xs text-muted">{o.city}</p>
+                    {o.barqraftar_tracking_number && (
+                      <p className="text-[10px] font-mono text-indigo-600 mt-0.5">BR: {o.barqraftar_tracking_number}</p>
+                    )}
                     <div className="flex items-center gap-3 mt-2">
                       <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)} className={`text-xs font-medium px-2 py-1 border-0 outline-none ${getStatusColor(o.status)}`}>
                         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                       <span className="text-sm font-medium">{formatPrice(o.total)}</span>
                     </div>
+                    {!o.barqraftar_tracking_number && (
+                      <button
+                        onClick={() => sendToBarqRaftar(o.id)}
+                        disabled={sendingBR === o.id}
+                        className="mt-2 text-[10px] text-indigo-600 hover:text-indigo-800 flex items-center gap-1 disabled:opacity-50"
+                      >
+                        {sendingBR === o.id ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                        Send to Courier
+                      </button>
+                    )}
                   </div>
                   <button onClick={() => setSelected(o)} className="p-2 hover:bg-gold-50 transition-colors cursor-pointer flex-shrink-0">
                     <Eye size={14} />
@@ -83,6 +149,7 @@ export default function AdminOrdersPage() {
               <th className="text-left px-4 py-3">Customer</th>
               <th className="text-left px-4 py-3">City</th>
               <th className="text-left px-4 py-3">Status</th>
+              <th className="text-left px-4 py-3">Tracking</th>
               <th className="text-right px-4 py-3">Total</th>
               <th className="text-left px-4 py-3">Date</th>
               <th className="text-right px-4 py-3">Actions</th>
@@ -98,6 +165,20 @@ export default function AdminOrdersPage() {
                   <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value)} className={`text-xs font-medium px-2 py-1 border-0 outline-none ${getStatusColor(o.status)}`}>
                     {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
+                </td>
+                <td className="px-4 py-3">
+                  {o.barqraftar_tracking_number ? (
+                    <span className="font-mono text-xs text-indigo-600">{o.barqraftar_tracking_number}</span>
+                  ) : (
+                    <button
+                      onClick={() => sendToBarqRaftar(o.id)}
+                      disabled={sendingBR === o.id}
+                      className="text-[10px] text-indigo-600 hover:text-indigo-800 flex items-center gap-1 disabled:opacity-50 cursor-pointer"
+                    >
+                      {sendingBR === o.id ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                      Send
+                    </button>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right font-medium">{formatPrice(o.total)}</td>
                 <td className="px-4 py-3 text-xs text-muted">{new Date(o.created_at).toLocaleDateString()}</td>
@@ -115,6 +196,37 @@ export default function AdminOrdersPage() {
       <Modal isOpen={!!selected} onClose={() => setSelected(null)} title={`Order ${selected?.order_number || ''}`}>
         {selected && (
           <div className="space-y-4 text-sm">
+            {/* BarqRaftar Courier Info */}
+            <div className="bg-indigo-50 border border-indigo-100 p-3 space-y-2">
+              <p className="text-xs font-medium text-indigo-800">Courier (BarqRaftar)</p>
+              {selected.barqraftar_tracking_number ? (
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <p className="font-mono text-sm text-indigo-700">{selected.barqraftar_tracking_number}</p>
+                    {selected.barqraftar_status && (
+                      <p className="text-xs text-indigo-600 capitalize mt-0.5">Status: {selected.barqraftar_status}</p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => refreshBarqRaftarStatus(selected.barqraftar_tracking_number)}
+                    disabled={refreshingBR}
+                    className="p-1.5 hover:bg-indigo-100 transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw size={14} className={`text-indigo-600 ${refreshingBR ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => sendToBarqRaftar(selected.id)}
+                  disabled={sendingBR === selected.id}
+                  className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                >
+                  {sendingBR === selected.id ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  Send to BarqRaftar
+                </button>
+              )}
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div><p className="text-muted text-xs">Customer</p><p className="font-medium">{selected.first_name} {selected.last_name}</p></div>
               <div><p className="text-muted text-xs">Phone</p><p>{selected.phone}</p></div>

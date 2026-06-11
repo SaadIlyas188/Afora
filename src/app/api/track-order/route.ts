@@ -36,6 +36,8 @@ export async function GET(req: NextRequest) {
     city: data.city,
     postal_code: data.postal_code,
     notes: data.notes,
+    barqraftar_tracking_number: data.barqraftar_tracking_number || null,
+    barqraftar_status: data.barqraftar_status || null,
     items: data.items,
   };
 

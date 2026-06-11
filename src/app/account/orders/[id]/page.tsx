@@ -25,6 +25,7 @@ export default function OrderDetailPage() {
   const { id } = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [courierLabel, setCourierLabel] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -34,7 +35,16 @@ export default function OrderDetailPage() {
       .eq('id', id)
       .single()
       .then(({ data }) => {
-        if (data) setOrder(data);
+        if (data) {
+          setOrder(data);
+          // Fetch live courier status if tracking number exists
+          if (data.barqraftar_tracking_number) {
+            fetch(`/api/barqraftar/track?tracking_number=${encodeURIComponent(data.barqraftar_tracking_number)}`)
+              .then(r => r.json())
+              .then(d => { if (d.success) setCourierLabel(d.status_label); })
+              .catch(() => {});
+          }
+        }
         setLoading(false);
       });
   }, [id]);
@@ -80,6 +90,22 @@ export default function OrderDetailPage() {
           </div>
           <p className="text-sm text-muted mt-1 pl-[52px]">{cfg.message}</p>
         </div>
+
+        {/* Courier Tracking */}
+        {order.barqraftar_tracking_number && (
+          <div className="border border-indigo-200/50 bg-indigo-50/30 p-5 md:p-6">
+            <h2 className="text-xs font-medium mb-2 uppercase tracking-widest text-muted">Courier Tracking</h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-mono text-sm text-indigo-600">{order.barqraftar_tracking_number}</p>
+                {courierLabel && (
+                  <p className="text-xs text-muted mt-0.5">Courier status: <span className="text-foreground font-medium">{courierLabel}</span></p>
+                )}
+              </div>
+              <span className="text-[9px] text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">BarqRaftar</span>
+            </div>
+          </div>
+        )}
 
         {/* Progress Tracker */}
         {!isCancelled && (

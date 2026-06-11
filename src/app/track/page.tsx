@@ -29,6 +29,19 @@ export default function TrackOrderPage() {
   const [order, setOrder] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [courierStatus, setCourierStatus] = useState<{ label: string; status: string } | null>(null);
+
+  const fetchCourierStatus = async (trackingNumber: string) => {
+    try {
+      const res = await fetch(`/api/barqraftar/track?tracking_number=${encodeURIComponent(trackingNumber)}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setCourierStatus({ label: data.status_label, status: data.status });
+      }
+    } catch {
+      // Courier status fetch is best-effort
+    }
+  };
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,12 +49,16 @@ export default function TrackOrderPage() {
     setLoading(true);
     setError('');
     setOrder(null);
+    setCourierStatus(null);
 
     try {
       const res = await fetch(`/api/track-order?order_number=${encodeURIComponent(orderNumber.trim())}`);
       const json = await res.json();
       if (res.ok && json.order) {
         setOrder(json.order);
+        if (json.order.barqraftar_tracking_number) {
+          fetchCourierStatus(json.order.barqraftar_tracking_number);
+        }
       } else {
         setError('No order found with that number. Please check and try again.');
       }
@@ -125,6 +142,22 @@ export default function TrackOrderPage() {
                 </div>
                 <p className="text-xs font-body text-muted font-light mt-2 leading-relaxed">{cfg.message}</p>
               </div>
+
+              {/* Courier tracking info */}
+              {order.barqraftar_tracking_number && (
+                <div className="bg-white border border-indigo-200/50 rounded-2xl p-5">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted font-body mb-2">Courier Tracking</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-mono text-sm text-indigo-600">{order.barqraftar_tracking_number}</p>
+                      {courierStatus && (
+                        <p className="text-xs text-muted mt-0.5">Courier status: <span className="text-foreground font-medium">{courierStatus.label}</span></p>
+                      )}
+                    </div>
+                    <span className="text-[9px] text-muted bg-indigo-50 px-2 py-0.5 rounded-full">BarqRaftar</span>
+                  </div>
+                </div>
+              )}
 
               {/* Progress tracker */}
               {!isCancelled && (

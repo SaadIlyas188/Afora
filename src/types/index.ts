@@ -121,6 +121,9 @@ export interface Order {
   total: number;
   status: OrderStatus;
   notes: string | null;
+  barqraftar_tracking_number: string | null;
+  barqraftar_status: string | null;
+  barqraftar_order_id: number | null;
   created_at: string;
   updated_at: string;
   items?: OrderItem[];

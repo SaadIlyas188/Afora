@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { sendOrder, isConfigured } from '@/lib/barqraftar';
 
 export async function POST(request: Request) {
   try {
@@ -38,6 +39,43 @@ export async function POST(request: Request) {
       // Order was created, clean up
       await supabase.from('orders').delete().eq('id', createdOrder.id);
       return NextResponse.json({ error: 'Failed to create order items' }, { status: 500 });
+    }
+
+    // Auto-send to BarqRaftar (non-blocking — order succeeds even if courier fails)
+    if (isConfigured()) {
+      try {
+        const brResult = await sendOrder({
+          referenceId: createdOrder.order_number,
+          customerName: `${createdOrder.first_name} ${createdOrder.last_name}`,
+          customerAddress: `${createdOrder.address}, ${createdOrder.city} ${createdOrder.postal_code}`,
+          customerContact: createdOrder.phone,
+          customerEmail: createdOrder.email,
+          codAmount: createdOrder.total,
+          totalAmount: createdOrder.total,
+          toCityName: createdOrder.city,
+          lineItems: items.map((item: { product_name: string; quantity: number }) => ({
+            name: item.product_name,
+            quantity: item.quantity,
+          })),
+        });
+
+        if (brResult.success && brResult.trackingNumber) {
+          await supabase
+            .from('orders')
+            .update({
+              barqraftar_tracking_number: brResult.trackingNumber,
+              barqraftar_status: 'pending',
+            })
+            .eq('id', createdOrder.id);
+
+          createdOrder.barqraftar_tracking_number = brResult.trackingNumber;
+          createdOrder.barqraftar_status = 'pending';
+        } else {
+          console.warn('BarqRaftar order send failed:', brResult.message);
+        }
+      } catch (brErr) {
+        console.error('BarqRaftar auto-send error (non-blocking):', brErr);
+      }
     }
 
     return NextResponse.json({ order: createdOrder });
