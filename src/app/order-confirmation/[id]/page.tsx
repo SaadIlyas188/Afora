@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { Order } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -37,97 +37,51 @@ export default function OrderConfirmationPage() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-lg w-full text-center"
+        className="max-w-md w-full text-center"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', delay: 0.2 }}
-          className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6"
+          transition={{ type: 'spring', delay: 0.2, stiffness: 200 }}
+          className="w-16 h-16 rounded-full bg-green-50 border border-green-200 flex items-center justify-center mx-auto mb-8"
         >
-          <CheckCircle size={40} className="text-green-500" />
+          <Check size={28} strokeWidth={2.5} className="text-green-500" />
         </motion.div>
 
-        <h1 className="text-2xl md:text-3xl font-light tracking-wide font-heading mb-2">Order Confirmed!</h1>
-        <p className="text-muted mb-6">
-          Thank you for your order. We&apos;ll send you an email confirmation shortly.
+        <h1 className="text-2xl md:text-3xl font-heading font-light tracking-wide mb-2">
+          Thank You for Your Order
+        </h1>
+        <p className="text-sm text-muted mb-8">
+          We&apos;ve received your order and will get it to you soon.
         </p>
 
-        <div className="border border-gold-200/40 p-6 text-left mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Package size={18} className="text-muted" />
-            <h2 className="font-medium">Order Details</h2>
+        <div className="border border-gold-200/40 p-5 text-left mb-8 space-y-3 text-sm">
+          <div className="flex justify-between">
+            <span className="text-muted">Order</span>
+            <span className="font-mono font-medium">{order.order_number}</span>
           </div>
-
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted">Order Number</span>
-              <span className="font-mono font-medium">{order.order_number}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">Status</span>
-              <span className="text-foreground capitalize font-medium">{order.status}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">Payment</span>
-              <span>Cash on Delivery</span>
-            </div>
-
-            <div className="border-t border-gold-200/40 pt-3 mt-3 space-y-1">
-              {order.items?.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span>{item.product_name} × {item.quantity}</span>
-                  <span>{formatPrice(item.total_price)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="border-t border-gold-200/40 pt-3 space-y-1">
-              <div className="flex justify-between">
-                <span className="text-muted">Subtotal</span>
-                <span>{formatPrice(order.subtotal)}</span>
-              </div>
-              {order.discount_amount > 0 && (
-                <div className="flex justify-between text-green-600">
-                  <span>Discount</span>
-                  <span>-{formatPrice(order.discount_amount)}</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-muted">Delivery</span>
-                <span>{order.delivery_charges === 0 ? 'Free' : formatPrice(order.delivery_charges)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-base pt-2 border-t border-gold-200/40">
-                <span>Total</span>
-                <span className="text-foreground">{formatPrice(order.total)}</span>
-              </div>
-            </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Total</span>
+            <span className="font-medium">{formatPrice(order.total)}</span>
           </div>
-
-          <div className="mt-4 pt-3 border-t border-gold-200/40 text-sm">
-            <p className="text-muted">Delivering to:</p>
-            <p className="font-medium">{order.first_name} {order.last_name}</p>
-            <p className="text-muted">{order.address}, {order.city} {order.postal_code}</p>
-            <p className="text-muted">{order.phone}</p>
+          <div className="flex justify-between">
+            <span className="text-muted">Payment</span>
+            <span>Cash on Delivery</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Delivering to</span>
+            <span className="text-right">{order.city}</span>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/products">
-            <Button className="gap-2 w-full sm:w-auto">
-              Continue Shopping
-              <ArrowRight size={16} />
-            </Button>
-          </Link>
-          <Link href="/account/orders">
-            <Button variant="outline" className="w-full sm:w-auto">
-              View Orders
-            </Button>
-          </Link>
-        </div>
+        <Link href="/">
+          <Button className="w-full sm:w-auto px-10">
+            Continue Shopping
+          </Button>
+        </Link>
       </motion.div>
     </div>
   );

@@ -18,6 +18,7 @@ export default function CheckoutPage() {
   const { user, profile } = useAuth();
   const router = useRouter();
   const [placing, setPlacing] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const [form, setForm] = useState({
     first_name: '',
@@ -224,10 +225,11 @@ export default function CheckoutPage() {
     }).catch(() => {});
 
     clearCart();
+    setOrderPlaced(true);
     router.push(`/order-confirmation/${order.id}`);
   };
 
-  if (items.length === 0) {
+  if (!orderPlaced && items.length === 0) {
     router.push('/cart');
     return null;
   }
