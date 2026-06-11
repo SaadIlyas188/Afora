@@ -14,7 +14,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { toast } from 'sonner';
 
 export default function CartPage() {
-  const { items, subtotal, deliveryCharges, discount, total, promoCode, removeFromCart, updateQuantity, applyPromo, removePromo } = useCart();
+  const { items, subtotal, deliveryCharges, freeDeliveryThreshold, discount, total, promoCode, removeFromCart, updateQuantity, applyPromo, removePromo } = useCart();
   const [promoInput, setPromoInput] = useState('');
   const [applyingPromo, setApplyingPromo] = useState(false);
 
@@ -149,10 +149,10 @@ export default function CartPage() {
               )}
               <div className="flex justify-between">
                 <span className="text-muted">Delivery</span>
-                <span>{deliveryCharges === 0 ? <span className="text-green-600">Free</span> : formatPrice(deliveryCharges)}</span>
+                <span>{deliveryCharges === 0 ? <span className="text-green-600">Free</span> : <span>Standard — {formatPrice(deliveryCharges)}</span>}</span>
               </div>
-              {deliveryCharges > 0 && subtotal < 5000 && (
-                <p className="text-xs text-muted font-body font-light">Add {formatPrice(5000 - subtotal)} more for free delivery</p>
+              {deliveryCharges > 0 && freeDeliveryThreshold > 0 && subtotal < freeDeliveryThreshold && (
+                <p className="text-xs text-muted font-body font-light">Add {formatPrice(freeDeliveryThreshold - subtotal)} more for free delivery</p>
               )}
               <div className="flex justify-between font-medium text-base border-t border-gold-200/40 pt-3">
                 <span>Total</span>

@@ -60,7 +60,7 @@ export default function CheckoutPage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single()
+        .maybeSingle()
         .then(({ data }) => {
           if (data) {
             setForm((prev) => ({
@@ -153,39 +153,27 @@ export default function CheckoutPage() {
       }
     }
 
-    // Create order
-    const { data: order, error } = await supabase
-      .from('orders')
-      .insert({
-        order_number: orderNumber,
-        user_id: user?.id || null,
-        first_name: form.first_name,
-        last_name: form.last_name,
-        email: form.email,
-        phone: form.phone,
-        address: form.address,
-        city: form.city,
-        postal_code: form.postal_code,
-        subtotal,
-        delivery_charges: deliveryCharges,
-        discount_amount: discount,
-        promo_code_id: promoCodeId,
-        total,
-        status: 'pending',
-        notes: form.notes || null,
-      })
-      .select()
-      .single();
+    // Create order via server API route (bypasses RLS for guest users)
+    const orderPayload = {
+      order_number: orderNumber,
+      user_id: user?.id || null,
+      first_name: form.first_name,
+      last_name: form.last_name,
+      email: form.email,
+      phone: form.phone,
+      address: form.address,
+      city: form.city,
+      postal_code: form.postal_code,
+      subtotal,
+      delivery_charges: deliveryCharges,
+      discount_amount: discount,
+      promo_code_id: promoCodeId,
+      total,
+      status: 'pending',
+      notes: form.notes || null,
+    };
 
-    if (error || !order) {
-      toast.error('Failed to place order. Please try again.');
-      setPlacing(false);
-      return;
-    }
-
-    // Create order items
-    const orderItems = items.map((item) => ({
-      order_id: order.id,
+    const orderItemsPayload = items.map((item) => ({
       product_id: item.type === 'product' ? item.id : null,
       bundle_id: item.type === 'bundle' ? item.id : null,
       product_name: item.name,
@@ -194,7 +182,21 @@ export default function CheckoutPage() {
       total_price: item.price * item.quantity,
     }));
 
-    await supabase.from('order_items').insert(orderItems);
+    const res = await fetch('/api/place-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order: orderPayload, items: orderItemsPayload }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok || !result.order) {
+      toast.error('Failed to place order. Please try again.');
+      setPlacing(false);
+      return;
+    }
+
+    const order = result.order;
 
     // Send confirmation email
     const itemsHtml = buildOrderItemsHtml(
@@ -332,7 +334,7 @@ export default function CheckoutPage() {
               )}
               <div className="flex justify-between">
                 <span className="text-muted">Delivery</span>
-                <span>{deliveryCharges === 0 ? 'Free' : formatPrice(deliveryCharges)}</span>
+                <span>{deliveryCharges === 0 ? <span className="text-green-600">Free</span> : <span>Standard — {formatPrice(deliveryCharges)}</span>}</span>
               </div>
               <div className="flex justify-between font-medium text-base border-t border-gold-200/40 pt-3">
                 <span>Total</span>

@@ -42,7 +42,7 @@ export default function ProductDetailPage() {
 
     supabase
       .from('products')
-      .select('*, category:categories(*), images:product_images(*), ingredients:product_ingredients(*)')
+      .select('*, category:categories(*), images:product_images(*), ingredients:product_ingredients(*), highlights:product_highlights(*)')
       .eq('slug', slug)
       .single()
       .then(({ data }) => {
@@ -156,6 +156,7 @@ export default function ProductDetailPage() {
 
   const images = product.images?.sort((a, b) => a.sort_order - b.sort_order) || [];
   const ingredients = product.ingredients?.sort((a, b) => a.sort_order - b.sort_order) || [];
+  const highlights = product.highlights?.sort((a, b) => a.sort_order - b.sort_order) || [];
   const avgRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
   const inWishlist = isInWishlist(product.id);
 
@@ -229,6 +230,24 @@ export default function ProductDetailPage() {
 
             <p className="font-body text-muted font-light text-sm md:text-base leading-relaxed mb-6">{product.description}</p>
 
+            {/* Highlights */}
+            {highlights.length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="w-5 h-px bg-[#c8a951]" />
+                  <h3 className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-muted">Highlights</h3>
+                </div>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+                  {highlights.map((h) => (
+                    <li key={h.id} className="flex items-start gap-2.5">
+                      <span className="mt-[5px] w-1.5 h-1.5 bg-[#c8a951] rotate-45 flex-shrink-0 inline-block" />
+                      <span className="font-body text-sm text-foreground/80 font-light leading-snug">{h.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* How to Use */}
             <div className="bg-[#f5f0e8] border-l-2 border-[#c8a951] px-4 md:px-5 py-4 mb-6">
               <h3 className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-[#c8a951] mb-1.5">How to Use</h3>
@@ -253,7 +272,7 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex gap-3 mb-8">
-              <Button onClick={handleAddToCart} size="lg" className="flex-1 gap-2">
+              <Button onClick={handleAddToCart} size="lg" className="flex-1 gap-2 justify-center">
                 <ShoppingBag size={18} />
                 Add to Cart
               </Button>

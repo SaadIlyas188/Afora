@@ -16,6 +16,11 @@ const SETTINGS_KEYS = [
   { key: 'about_text', label: 'About Page Extra Text', type: 'textarea' },
 ];
 
+const DELIVERY_SETTINGS_KEYS = [
+  { key: 'delivery_charges', label: 'Delivery Charges (Rs.) — Set 0 for always free', type: 'number' },
+  { key: 'free_delivery_threshold', label: 'Free Delivery Above (Rs.) — Set 0 to disable threshold', type: 'number' },
+];
+
 export default function AdminSettingsPage() {
   const supabase = createClient();
   const [settings, setSettings] = useState<Record<string, string>>({});
@@ -52,6 +57,7 @@ export default function AdminSettingsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20"><Loader2 size={28} className="animate-spin text-muted" /></div>
       ) : (
+      <>
       <div className="bg-white rounded-xl shadow-sm border border-gold-50 p-6 space-y-5">
         {SETTINGS_KEYS.map((s) => (
           s.type === 'textarea' ? (
@@ -61,6 +67,23 @@ export default function AdminSettingsPage() {
           )
         ))}
       </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gold-50 p-6 mt-6">
+        <h2 className="text-base font-heading font-medium tracking-wide mb-4">Delivery Charges</h2>
+        <div className="space-y-5">
+          {DELIVERY_SETTINGS_KEYS.map((s) => (
+            <Input
+              key={s.key}
+              label={s.label}
+              type="number"
+              min="0"
+              value={settings[s.key] ?? ''}
+              onChange={(e) => setSettings({ ...settings, [s.key]: e.target.value })}
+            />
+          ))}
+        </div>
+      </div>
+      </>
       )}
     </div>
   );

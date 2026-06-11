@@ -24,6 +24,7 @@ export default function AdminProductsPage() {
     is_active: true, is_featured: true,
   });
   const [ingredients, setIngredients] = useState<{ name: string; description: string }[]>([]);
+  const [highlights, setHighlights] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -44,6 +45,7 @@ export default function AdminProductsPage() {
     setEditing(null);
     setForm({ name: '', slug: '', description: '', short_description: '', how_to_use: '', price: '', compare_at_price: '', category_id: '', step_number: '', is_active: true, is_featured: true });
     setIngredients([]);
+    setHighlights([]);
     setImageFiles([]);
     setShowModal(true);
   };
@@ -57,6 +59,9 @@ export default function AdminProductsPage() {
     });
     supabase.from('product_ingredients').select('*').eq('product_id', p.id).order('sort_order').then(({ data }) => {
       setIngredients(data?.map((d: any) => ({ name: d.ingredient_name || d.name || '', description: d.ingredient_description || d.description || '' })) || []);
+    });
+    supabase.from('product_highlights').select('*').eq('product_id', p.id).order('sort_order').then(({ data }) => {
+      setHighlights(data?.map((d: any) => d.text) || []);
     });
     setImageFiles([]);
     setShowModal(true);
@@ -86,6 +91,13 @@ export default function AdminProductsPage() {
     if (ingredients.length > 0) {
       await supabase.from('product_ingredients').insert(
         ingredients.map((ing, i) => ({ product_id: productId, ingredient_name: ing.name, ingredient_description: ing.description, sort_order: i }))
+      );
+    }
+
+    await supabase.from('product_highlights').delete().eq('product_id', productId);
+    if (highlights.length > 0) {
+      await supabase.from('product_highlights').insert(
+        highlights.filter(t => t.trim()).map((text, i) => ({ product_id: productId, text: text.trim(), sort_order: i }))
       );
     }
 
@@ -303,6 +315,31 @@ export default function AdminProductsPage() {
                 </div>
               ))}
               {ingredients.length === 0 && <p className="text-xs text-muted py-1">No key ingredients added</p>}
+            </div>
+          </div>
+
+          <div className="h-px bg-gold-100" />
+
+          {/* Highlights */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-body font-semibold tracking-[0.2em] uppercase text-gold-500">Highlights</p>
+              <button type="button" onClick={() => setHighlights([...highlights, ''])} className="text-xs text-[#c8a951] font-medium hover:underline cursor-pointer">+ Add</button>
+            </div>
+            <div className="space-y-2">
+              {highlights.map((text, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[#c8a951] rotate-45 flex-shrink-0 inline-block" />
+                  <input
+                    value={text}
+                    onChange={(e) => { const n = [...highlights]; n[i] = e.target.value; setHighlights(n); }}
+                    placeholder="e.g. Fragrance-free formula"
+                    className="flex-1 border border-gold-200/40 px-3 py-2 text-sm focus:outline-none focus:border-[#c8a951] rounded-lg"
+                  />
+                  <button onClick={() => setHighlights(highlights.filter((_, j) => j !== i))} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-50 text-red-400 cursor-pointer text-lg leading-none flex-shrink-0">&times;</button>
+                </div>
+              ))}
+              {highlights.length === 0 && <p className="text-xs text-muted py-1">No highlights added</p>}
             </div>
           </div>
 

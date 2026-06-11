@@ -28,6 +28,7 @@ export interface Product {
   category?: Category;
   images?: ProductImage[];
   ingredients?: ProductIngredient[];
+  highlights?: ProductHighlight[];
   average_rating?: number;
   review_count?: number;
 }
@@ -46,6 +47,13 @@ export interface ProductIngredient {
   product_id: string;
   ingredient_name: string;
   ingredient_description: string;
+  sort_order: number;
+}
+
+export interface ProductHighlight {
+  id: string;
+  product_id: string;
+  text: string;
   sort_order: number;
 }
 

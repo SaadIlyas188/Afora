@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import type { CartItem, AppliedPromo } from '@/types';
-import { DELIVERY_CHARGES } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
 interface CartContextType {
@@ -10,6 +10,7 @@ interface CartContextType {
   totalItems: number;
   subtotal: number;
   deliveryCharges: number;
+  freeDeliveryThreshold: number;
   discount: number;
   total: number;
   promoCode: AppliedPromo | null;
@@ -27,6 +28,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [promoCode, setPromoCode] = useState<AppliedPromo | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [deliveryRate, setDeliveryRate] = useState(250);
+  const [freeDeliveryThreshold, setFreeDeliveryThreshold] = useState(5000);
 
   useEffect(() => {
     const saved = localStorage.getItem('afora-cart');
@@ -34,6 +37,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (saved) setItems(JSON.parse(saved));
     if (savedPromo) setPromoCode(JSON.parse(savedPromo));
     setLoaded(true);
+
+    const supabase = createClient();
+    supabase
+      .from('site_settings')
+      .select('key, value')
+      .in('key', ['delivery_charges', 'free_delivery_threshold'])
+      .then(({ data }) => {
+        if (data) {
+          data.forEach((row) => {
+            const num = parseFloat(row.value);
+            if (!isNaN(num)) {
+              if (row.key === 'delivery_charges') setDeliveryRate(num);
+              if (row.key === 'free_delivery_threshold') setFreeDeliveryThreshold(num);
+            }
+          });
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -96,7 +116,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const deliveryCharges = subtotal > 0 ? (subtotal >= 5000 ? 0 : DELIVERY_CHARGES) : 0;
+  const deliveryCharges = subtotal > 0 ? (freeDeliveryThreshold > 0 && subtotal >= freeDeliveryThreshold ? 0 : deliveryRate) : 0;
 
   const discount = promoCode
     ? promoCode.discount_type === 'percentage'
@@ -113,6 +133,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         totalItems,
         subtotal,
         deliveryCharges,
+        freeDeliveryThreshold,
         discount,
         total,
         promoCode,
