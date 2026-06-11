@@ -224,6 +224,16 @@ export default function CheckoutPage() {
       phone: form.phone,
     }).catch(() => {});
 
+    // Store order data so the confirmation page can display it without a Supabase fetch
+    // (RLS blocks guest reads; sessionStorage works for both guests and logged-in users)
+    sessionStorage.setItem(
+      `afora-order-${order.id}`,
+      JSON.stringify({
+        ...order,
+        items: orderItemsPayload.map((item, i) => ({ id: i, ...item })),
+      })
+    );
+
     clearCart();
     setOrderPlaced(true);
     router.push(`/order-confirmation/${order.id}`);

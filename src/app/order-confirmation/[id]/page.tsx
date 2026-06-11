@@ -13,18 +13,49 @@ import Button from '@/components/ui/Button';
 export default function OrderConfirmationPage() {
   const { id } = useParams();
   const [order, setOrder] = useState<Order | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    const orderId = Array.isArray(id) ? id[0] : id;
+
+    // Try sessionStorage first — works for guests and freshly placed orders
+    const cached = sessionStorage.getItem(`afora-order-${orderId}`);
+    if (cached) {
+      try {
+        setOrder(JSON.parse(cached));
+        return;
+      } catch {
+        // fall through to Supabase
+      }
+    }
+
+    // Fallback: Supabase (works for logged-in users revisiting the page)
     const supabase = createClient();
     supabase
       .from('orders')
       .select('*, items:order_items(*)')
-      .eq('id', id)
+      .eq('id', orderId)
       .single()
-      .then(({ data }) => {
-        if (data) setOrder(data);
+      .then(({ data, error }) => {
+        if (data) {
+          setOrder(data);
+        } else {
+          console.error('Order fetch error:', error);
+          setFailed(true);
+        }
       });
   }, [id]);
+
+  if (failed) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="text-muted text-sm">We couldn&apos;t load your order details, but your order was placed successfully.</p>
+        <Link href="/">
+          <Button>Continue Shopping</Button>
+        </Link>
+      </div>
+    );
+  }
 
   if (!order) {
     return (
