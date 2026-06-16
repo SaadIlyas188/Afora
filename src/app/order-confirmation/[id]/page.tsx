@@ -89,7 +89,7 @@ export default function OrderConfirmationPage() {
           We&apos;ve received your order and will get it to you soon.
         </p>
 
-        <div className="border border-gold-200/40 p-5 text-left mb-8 space-y-3 text-sm">
+        <div className="border border-gold-200/40 p-5 text-left mb-4 space-y-3 text-sm">
           <div className="flex justify-between">
             <span className="text-muted">Order</span>
             <span className="font-mono font-medium">{order.order_number}</span>
@@ -107,6 +107,11 @@ export default function OrderConfirmationPage() {
             <span className="text-right">{order.city}</span>
           </div>
         </div>
+
+        <p className="text-xs text-muted mb-8">
+          Use your order number <span className="font-mono text-foreground">{order.order_number}</span> to track your order at{' '}
+          <Link href="/track" className="underline underline-offset-2 hover:text-foreground transition-colors">/track</Link>
+        </p>
 
         <Link href="/">
           <Button className="w-full sm:w-auto px-10">

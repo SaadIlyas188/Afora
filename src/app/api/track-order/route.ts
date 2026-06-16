@@ -6,17 +6,34 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// UUID format check
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function GET(req: NextRequest) {
-  const orderNumber = req.nextUrl.searchParams.get('order_number');
-  if (!orderNumber) {
+  const raw = req.nextUrl.searchParams.get('order_number');
+  if (!raw) {
     return NextResponse.json({ error: 'order_number is required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
-    .from('orders')
-    .select('*, items:order_items(*)')
-    .eq('order_number', orderNumber.trim().toUpperCase())
-    .single();
+  const query = raw.trim();
+
+  // Search by UUID (order id) or by order_number
+  let result;
+  if (UUID_REGEX.test(query)) {
+    result = await supabase
+      .from('orders')
+      .select('*, items:order_items(*)')
+      .eq('id', query)
+      .single();
+  } else {
+    result = await supabase
+      .from('orders')
+      .select('*, items:order_items(*)')
+      .eq('order_number', query.toUpperCase())
+      .single();
+  }
+
+  const { data, error } = result;
 
   if (error || !data) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });

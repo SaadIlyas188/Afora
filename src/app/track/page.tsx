@@ -83,7 +83,7 @@ export default function TrackOrderPage() {
             <span className="text-[10px] font-body tracking-[0.3em] uppercase text-muted">Delivery</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-heading font-light tracking-wide text-foreground mb-2">Track Order</h1>
-          <p className="text-sm font-body text-muted font-light">Enter your order number to see real-time status.</p>
+          <p className="text-sm font-body text-muted font-light">Enter your order number from your confirmation page (e.g. <span className="font-mono">AFORA-20260611-1234</span>).</p>
         </div>
 
         {/* Login nudge for guests */}
@@ -104,7 +104,7 @@ export default function TrackOrderPage() {
               type="text"
               value={orderNumber}
               onChange={(e) => setOrderNumber(e.target.value)}
-              placeholder="e.g. AFR-0001"
+              placeholder="e.g. AFORA-20260611-1234"
               className="flex-1 border border-gold-200/60 px-4 py-3 text-sm font-body focus:outline-none focus:border-foreground transition-colors rounded-none"
             />
             <Button type="submit" loading={loading} className="gap-2 px-5">
@@ -237,7 +237,7 @@ export default function TrackOrderPage() {
                           <p className="text-sm font-body text-foreground truncate">{item.product_name}</p>
                           <p className="text-xs text-muted">Qty: {item.quantity}</p>
                         </div>
-                        <p className="text-sm font-body font-medium text-foreground flex-shrink-0">{formatPrice(item.total)}</p>
+                        <p className="text-sm font-body font-medium text-foreground flex-shrink-0">{formatPrice(item.total_price)}</p>
                       </div>
                     ))}
                     <div className="pt-2 border-t border-gold-100 flex justify-between">
