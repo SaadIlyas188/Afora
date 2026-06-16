@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { sendOrder, trackOrder, isConfigured } from '@/lib/barqraftar';
+import { sendOrderNotificationToCompany } from '@/lib/notify';
 
 export async function POST(request: Request) {
   try {
@@ -86,6 +87,29 @@ export async function POST(request: Request) {
         console.error('BarqRaftar auto-send error (non-blocking):', brErr);
       }
     }
+
+    // Send internal notification email to company (non-blocking)
+    sendOrderNotificationToCompany({
+      order_number: createdOrder.order_number,
+      customer_name: `${createdOrder.first_name} ${createdOrder.last_name}`,
+      customer_email: createdOrder.email,
+      customer_phone: createdOrder.phone,
+      address: createdOrder.address,
+      city: createdOrder.city,
+      postal_code: createdOrder.postal_code,
+      subtotal: createdOrder.subtotal,
+      delivery_charges: createdOrder.delivery_charges,
+      discount_amount: createdOrder.discount_amount,
+      total: createdOrder.total,
+      notes: createdOrder.notes,
+      barqraftar_tracking_number: createdOrder.barqraftar_tracking_number,
+      items: items.map((item: { product_name: string; quantity: number; unit_price: number; total_price: number }) => ({
+        product_name: item.product_name,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        total_price: item.total_price,
+      })),
+    }).catch(() => {});
 
     return NextResponse.json({ order: createdOrder });
   } catch (err) {
