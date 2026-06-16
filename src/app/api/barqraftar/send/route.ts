@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { sendOrder, isConfigured } from '@/lib/barqraftar';
+import { sendOrder, trackOrder, isConfigured } from '@/lib/barqraftar';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -54,17 +54,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: result.message || 'Failed to send' }, { status: 500 });
     }
 
+    // Fetch BarqRaftar order to get its internal numeric ID
+    let brOrderId: number | null = null;
+    const trackResult = await trackOrder(result.trackingNumber!);
+    if (trackResult.success && trackResult.order?.id) {
+      brOrderId = trackResult.order.id as number;
+    }
+
     await supabase
       .from('orders')
       .update({
         barqraftar_tracking_number: result.trackingNumber,
         barqraftar_status: 'pending',
+        barqraftar_order_id: brOrderId,
       })
       .eq('id', orderId);
 
     return NextResponse.json({
       success: true,
       tracking_number: result.trackingNumber,
+      barqraftar_order_id: brOrderId,
     });
   } catch (err) {
     console.error('BarqRaftar send error:', err);

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
-import { sendOrder, isConfigured } from '@/lib/barqraftar';
+import { sendOrder, trackOrder, isConfigured } from '@/lib/barqraftar';
 
 export async function POST(request: Request) {
   try {
@@ -60,16 +60,25 @@ export async function POST(request: Request) {
         });
 
         if (brResult.success && brResult.trackingNumber) {
+          // Fetch the BarqRaftar order to get its internal numeric ID
+          let brOrderId: number | null = null;
+          const trackResult = await trackOrder(brResult.trackingNumber);
+          if (trackResult.success && trackResult.order?.id) {
+            brOrderId = trackResult.order.id as number;
+          }
+
           await supabase
             .from('orders')
             .update({
               barqraftar_tracking_number: brResult.trackingNumber,
               barqraftar_status: 'pending',
+              barqraftar_order_id: brOrderId,
             })
             .eq('id', createdOrder.id);
 
           createdOrder.barqraftar_tracking_number = brResult.trackingNumber;
           createdOrder.barqraftar_status = 'pending';
+          createdOrder.barqraftar_order_id = brOrderId;
         } else {
           console.warn('BarqRaftar order send failed:', brResult.message);
         }
