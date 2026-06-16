@@ -4,16 +4,50 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 export default function BundlePromo() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [savings, setSavings] = useState(0);
+  const [bundlePrice, setBundlePrice] = useState(0);
+  const [individualPrice, setIndividualPrice] = useState(0);
+  const [ready, setReady] = useState(false);
+
+  // Fetch the bundle that contains the most products (the full 6-product set)
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from('bundles')
+      .select('id, price, bundle_products(product_id, product:products(price))')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (!data || data.length === 0) return;
+        // Find the bundle with the highest product count
+        const fullBundle = data.reduce((best: typeof data[0], b: typeof data[0]) =>
+          (b.bundle_products?.length ?? 0) > (best.bundle_products?.length ?? 0) ? b : best
+        );
+        const bPrice = fullBundle.price ?? 0;
+        const indivPrice = (fullBundle.bundle_products ?? []).reduce(
+          (sum: number, bp: { product: { price: number }[] | { price: number } | null }) => {
+            const p = bp.product;
+            if (!p) return sum;
+            if (Array.isArray(p)) return sum + (p[0]?.price ?? 0);
+            return sum + (p.price ?? 0);
+          },
+          0
+        );
+        setBundlePrice(bPrice);
+        setIndividualPrice(indivPrice);
+        setReady(true);
+      });
+  }, []);
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && ready) {
+      const target = individualPrice - bundlePrice;
+      if (target <= 0) { setSavings(target); return; }
       let current = 0;
-      const target = 3800;
       const step = target / 40;
       const interval = setInterval(() => {
         current += step;
@@ -25,7 +59,7 @@ export default function BundlePromo() {
       }, 25);
       return () => clearInterval(interval);
     }
-  }, [isInView]);
+  }, [isInView, ready, bundlePrice, individualPrice]);
 
   return (
     <section ref={ref} className="py-20 md:py-32 px-6 md:px-12 pb-28 md:pb-32 bg-foreground text-gold-50">
@@ -59,18 +93,18 @@ export default function BundlePromo() {
         >
           <div className="text-center">
             <p className="text-[10px] font-body tracking-[0.2em] uppercase text-gold-500 mb-2">Individual</p>
-            <p className="text-lg md:text-xl font-heading text-gold-400 line-through font-light">{formatPrice(11250)}</p>
+            <p className="text-lg md:text-xl font-heading text-gold-400 line-through font-light">{ready ? formatPrice(individualPrice) : '—'}</p>
           </div>
           <div className="hidden md:block w-px h-12 bg-gold-700" />
           <div className="text-center">
             <p className="text-[10px] font-body tracking-[0.2em] uppercase text-gold-300 mb-2">Bundle Price</p>
-            <p className="text-3xl md:text-4xl font-heading font-light text-gold-50">{formatPrice(7450)}</p>
+            <p className="text-3xl md:text-4xl font-heading font-light text-gold-50">{ready ? formatPrice(bundlePrice) : '—'}</p>
           </div>
           <div className="hidden md:block w-px h-12 bg-gold-700" />
           <div className="text-center">
             <p className="text-[10px] font-body tracking-[0.2em] uppercase text-gold-300 mb-2">You Save</p>
             <p className="text-xl md:text-2xl font-heading font-light text-gold-300">
-              {formatPrice(savings)}
+              {ready ? formatPrice(savings) : '—'}
             </p>
           </div>
         </motion.div>
