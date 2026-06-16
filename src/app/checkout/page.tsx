@@ -6,7 +6,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 import { formatPrice, generateOrderNumber, PAKISTANI_CITIES } from '@/lib/utils';
-import { sendOrderConfirmation, buildOrderItemsHtml } from '@/lib/email';
+
 import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import AnimatedSection from '@/components/ui/AnimatedSection';
@@ -198,31 +198,6 @@ export default function CheckoutPage() {
     }
 
     const order = result.order;
-
-    // Send confirmation email
-    const itemsHtml = buildOrderItemsHtml(
-      items.map((i) => ({
-        product_name: i.name,
-        quantity: i.quantity,
-        unit_price: i.price,
-        total_price: i.price * i.quantity,
-      }))
-    );
-
-    sendOrderConfirmation({
-      email: form.email,
-      name: `${form.first_name} ${form.last_name}`,
-      order_number: orderNumber,
-      order_date: new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' }),
-      items_html: itemsHtml,
-      subtotal: formatPrice(subtotal),
-      delivery: deliveryCharges === 0 ? 'Free' : formatPrice(deliveryCharges),
-      discount: discount > 0 ? `-${formatPrice(discount)}` : 'Rs. 0',
-      total: formatPrice(total),
-      address: form.address,
-      city: form.city,
-      phone: form.phone,
-    }).catch(() => {});
 
     // Store order data so the confirmation page can display it without a Supabase fetch
     // (RLS blocks guest reads; sessionStorage works for both guests and logged-in users)

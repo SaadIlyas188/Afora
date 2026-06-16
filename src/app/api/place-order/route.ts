@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { sendOrder, trackOrder, isConfigured } from '@/lib/barqraftar';
-import { sendOrderNotificationToCompany } from '@/lib/notify';
+import { sendOrderNotificationToCompany, sendOrderConfirmationToCustomer } from '@/lib/notify';
 
 export async function POST(request: Request) {
   try {
@@ -109,6 +109,29 @@ export async function POST(request: Request) {
         unit_price: item.unit_price,
         total_price: item.total_price,
       })),
+    }).catch(() => {});
+
+    // Send order confirmation email to customer (non-blocking)
+    sendOrderConfirmationToCustomer({
+      customer_email: createdOrder.email,
+      customer_name: `${createdOrder.first_name} ${createdOrder.last_name}`,
+      order_number: createdOrder.order_number,
+      order_date: new Date().toLocaleDateString('en-PK', { year: 'numeric', month: 'long', day: 'numeric' }),
+      items: items.map((item: { product_name: string; quantity: number; unit_price: number; total_price: number }) => ({
+        product_name: item.product_name,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        total_price: item.total_price,
+      })),
+      subtotal: createdOrder.subtotal,
+      delivery_charges: createdOrder.delivery_charges,
+      discount_amount: createdOrder.discount_amount,
+      total: createdOrder.total,
+      address: createdOrder.address,
+      city: createdOrder.city,
+      postal_code: createdOrder.postal_code,
+      phone: createdOrder.phone,
+      notes: createdOrder.notes,
     }).catch(() => {});
 
     return NextResponse.json({ order: createdOrder });
