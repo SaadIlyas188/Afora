@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice, getImageUrl } from '@/lib/utils';
@@ -19,8 +20,28 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
 
-  const primaryImage = product.images?.find((i) => i.is_primary) || product.images?.[0];
-  const imageUrl = getImageUrl(primaryImage?.image_url ?? null);
+  // Build ordered image list: primary first, then the rest
+  const allImages = product.images
+    ? [
+        ...(product.images.filter((i) => i.is_primary)),
+        ...(product.images.filter((i) => !i.is_primary)),
+      ]
+    : [];
+  const primaryImage = allImages[0] ?? null;
+
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+    intervalRef.current = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % allImages.length);
+    }, 2000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allImages.length]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -34,6 +55,8 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       slug: product.slug,
     });
   };
+
+  const imageUrl = getImageUrl(primaryImage?.image_url ?? null);
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -51,14 +74,39 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="overflow-hidden">
           {/* Image */}
           <div className="relative aspect-[3/4] overflow-hidden bg-cream-200 mb-4">
-            <Image
-              src={imageUrl}
-              alt={product.name}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              loading="lazy"
-            />
+            {allImages.length > 0 ? (
+              allImages.map((img, idx) => (
+                <Image
+                  key={img.image_url}
+                  src={getImageUrl(img.image_url)}
+                  alt={product.name}
+                  fill
+                  className={`object-cover transition-opacity duration-700 group-hover:scale-105 ${idx === currentIdx ? 'opacity-100' : 'opacity-0'}`}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  loading="lazy"
+                />
+              ))
+            ) : (
+              <Image
+                src={imageUrl}
+                alt={product.name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                loading="lazy"
+              />
+            )}
+            {/* Dot indicators — only when multiple images */}
+            {allImages.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                {allImages.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`block rounded-full transition-all duration-300 ${idx === currentIdx ? 'w-3 h-1 bg-white' : 'w-1 h-1 bg-white/50'}`}
+                  />
+                ))}
+              </div>
+            )}
             {/* Step Badge */}
             {product.step_number && (
               <div className="absolute top-3 left-3 text-[10px] font-body font-medium tracking-[0.15em] text-muted bg-gold-50/90 backdrop-blur-sm px-2 py-0.5">
