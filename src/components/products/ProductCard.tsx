@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice, getImageUrl } from '@/lib/utils';
@@ -32,16 +32,20 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
+  const handleMouseEnter = () => {
     if (allImages.length <= 1) return;
     intervalRef.current = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % allImages.length);
     }, 2000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allImages.length]);
+  };
+
+  const handleMouseLeave = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setCurrentIdx(0);
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -69,6 +73,8 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Link href={`/products/${product.slug}`} className="group block">
         <div className="overflow-hidden">
