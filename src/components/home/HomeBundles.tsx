@@ -92,20 +92,19 @@ export default function HomeBundles() {
                   draggable={false}
                 >
                   <div className="rounded-xl overflow-hidden bg-white border border-gold-200/40 h-full">
-                    {/* Image — natural aspect ratio */}
-                    <div className="relative overflow-hidden bg-[#f5ede0]">
+                    {/* Image — fixed aspect ratio */}
+                    <div className="relative overflow-hidden bg-[#f5ede0] aspect-[4/3]">
                       {bundle.image_url ? (
                         <Image
                           src={getImageUrl(bundle.image_url)}
                           alt={bundle.name}
-                          width={0}
-                          height={0}
+                          fill
                           sizes="60vw"
-                          style={{ width: '100%', height: 'auto', display: 'block' }}
+                          className="object-cover"
                           draggable={false}
                         />
                       ) : (
-                        <div className="aspect-[16/9] flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center">
                           <span className="font-heading font-light tracking-[0.3em] text-base" style={{ color: '#c8a951' }}>
                             AFORA
                           </span>
@@ -167,11 +166,11 @@ export default function HomeBundles() {
                   <motion.div key={bundle.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: idx * 0.08 }} className="h-full">
                     <Link href="/bundle" className="group block h-full">
                       <div className="relative overflow-hidden rounded-2xl border border-gold-200/50 bg-white hover:border-[#c8a951]/60 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-                        <div className="relative overflow-hidden bg-[#f5ede0] flex-shrink-0">
+                        <div className="relative overflow-hidden bg-[#f5ede0] flex-shrink-0 aspect-[4/3]">
                           {bundle.image_url ? (
-                            <Image src={getImageUrl(bundle.image_url)} alt={bundle.name} width={0} height={0} sizes="50vw" style={{ width: '100%', height: 'auto', display: 'block' }} className="group-hover:scale-[1.03] transition-transform duration-500" />
+                            <Image src={getImageUrl(bundle.image_url)} alt={bundle.name} fill sizes="50vw" className="object-cover group-hover:scale-[1.03] transition-transform duration-500" />
                           ) : (
-                            <div className="aspect-[16/9] flex items-center justify-center">
+                            <div className="absolute inset-0 flex items-center justify-center">
                               <span className="font-heading font-light tracking-[0.3em] text-2xl" style={{ color: 'rgba(200,169,81,0.4)' }}>AFORA</span>
                             </div>
                           )}
@@ -229,11 +228,11 @@ export default function HomeBundles() {
               return (
                 <Link key={`d-${bundle.id}-${i}`} href="/bundle" className="flex-shrink-0 group block" style={{ width: '280px' }} draggable={false}>
                   <div className="overflow-hidden rounded-2xl border border-gold-200/50 bg-white hover:border-[#c8a951]/60 hover:shadow-xl transition-all duration-300">
-                    <div className="relative overflow-hidden bg-[#f5ede0]">
+                    <div className="relative overflow-hidden bg-[#f5ede0] aspect-[4/3]">
                       {bundle.image_url ? (
-                        <Image src={getImageUrl(bundle.image_url)} alt={bundle.name} width={0} height={0} sizes="280px" style={{ width: '100%', height: 'auto', display: 'block' }} className="group-hover:scale-[1.03] transition-transform duration-500" draggable={false} />
+                        <Image src={getImageUrl(bundle.image_url)} alt={bundle.name} fill sizes="280px" className="object-cover group-hover:scale-[1.03] transition-transform duration-500" draggable={false} />
                       ) : (
-                        <div className="aspect-[16/9] flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center">
                           <span className="font-heading font-light tracking-[0.3em] text-xl" style={{ color: 'rgba(200,169,81,0.4)' }}>AFORA</span>
                         </div>
                       )}
