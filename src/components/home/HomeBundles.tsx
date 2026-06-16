@@ -125,9 +125,14 @@ export default function HomeBundles() {
                       <h3 className="text-xs font-heading font-light text-foreground tracking-wide leading-snug mb-1 line-clamp-1">
                         {bundle.name}
                       </h3>
-                      <p className="text-sm font-heading font-light" style={{ color: '#c8a951' }}>
-                        {formatPrice(bundle.price)}
-                      </p>
+                      <div className="flex items-baseline gap-2">
+                        <p className="text-sm font-heading font-light" style={{ color: '#c8a951' }}>
+                          {formatPrice(bundle.price)}
+                        </p>
+                        {bundle.compare_at_price > 0 && (
+                          <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -179,11 +184,11 @@ export default function HomeBundles() {
                           <h3 className="text-base font-heading font-light text-foreground tracking-wide mb-1.5 group-hover:text-[#c8a951] transition-colors leading-snug flex-1">{bundle.name}</h3>
                           {bundle.description && <p className="text-xs font-body text-muted/80 font-light line-clamp-2 mb-3">{bundle.description}</p>}
                           <div className="flex items-center justify-between pt-3 border-t border-gold-100/70 mt-auto">
-                            <div>
+                            <div className="flex items-baseline gap-2">
                               <p className="text-base font-heading font-light text-foreground">{formatPrice(bundle.price)}</p>
-                              <p className={`text-[11px] text-muted line-through font-body ${bundle.compare_at_price > 0 ? '' : 'invisible'}`}>
-                                {bundle.compare_at_price > 0 ? formatPrice(bundle.compare_at_price) : '\u00a0'}
-                              </p>
+                              {bundle.compare_at_price > 0 && (
+                                <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>
+                              )}
                             </div>
                             <div className="flex items-center gap-1 text-[10px] font-body font-medium tracking-[0.15em] uppercase group-hover:gap-2 transition-all duration-200" style={{ color: '#c8a951' }}>Shop <ArrowRight size={10} /></div>
                           </div>
@@ -239,12 +244,12 @@ export default function HomeBundles() {
                     <div className="p-4">
                       <h3 className="text-sm font-heading font-light text-foreground tracking-wide mb-2 group-hover:text-[#c8a951] transition-colors leading-snug">{bundle.name}</h3>
                       {bundle.description && <p className="text-[11px] font-body text-muted/80 font-light line-clamp-1 mb-2">{bundle.description}</p>}
-                      <div className="flex items-end justify-between pt-2 border-t border-gold-100/70">
-                        <div>
+                      <div className="flex items-center justify-between pt-2 border-t border-gold-100/70">
+                        <div className="flex items-baseline gap-2">
                           <p className="text-sm font-heading font-light text-foreground">{formatPrice(bundle.price)}</p>
-                          <p className={`text-[11px] text-muted line-through font-body ${bundle.compare_at_price > 0 ? '' : 'invisible'}`}>
-                            {bundle.compare_at_price > 0 ? formatPrice(bundle.compare_at_price) : '\u00a0'}
-                          </p>
+                          {bundle.compare_at_price > 0 && (
+                            <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>
+                          )}
                         </div>
                       </div>
                     </div>
