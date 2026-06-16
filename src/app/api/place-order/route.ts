@@ -109,7 +109,9 @@ export async function POST(request: Request) {
         unit_price: item.unit_price,
         total_price: item.total_price,
       })),
-    }).catch(() => {});
+    }).catch((notifyErr) => {
+      console.error('Company notification error (non-blocking):', notifyErr);
+    });
 
     return NextResponse.json({ order: createdOrder });
   } catch (err) {
