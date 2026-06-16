@@ -109,7 +109,7 @@ export async function POST(request: Request) {
         unit_price: item.unit_price,
         total_price: item.total_price,
       })),
-    }).catch(() => {});
+    }).catch((e) => console.error('[notify] company email failed:', e));
 
     // Send order confirmation email to customer (non-blocking)
     sendOrderConfirmationToCustomer({
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
       postal_code: createdOrder.postal_code,
       phone: createdOrder.phone,
       notes: createdOrder.notes,
-    }).catch(() => {});
+    }).catch((e) => console.error('[notify] customer email failed:', e));
 
     return NextResponse.json({ order: createdOrder });
   } catch (err) {
