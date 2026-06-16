@@ -118,7 +118,7 @@ export default function BundlePage() {
                 <p className="text-[10px] tracking-[0.3em] uppercase text-[#c8a951]/70 mb-1 font-body">Bundle Price</p>
                 <p className="text-2xl md:text-4xl font-light tracking-wide text-gold-50">{formatPrice(bundle.price)}</p>
               </div>
-              {bundle.compare_at_price && (
+              {(bundle.compare_at_price ?? 0) > 0 && savings > 0 && (
                 <div className="text-center">
                   <p className="text-[10px] tracking-[0.3em] uppercase text-[#c8a951]/70 mb-1 font-body">You Save</p>
                   <p className="text-lg md:text-xl text-[#c8a951] font-light">{formatPrice(savings)}</p>

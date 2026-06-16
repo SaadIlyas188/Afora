@@ -181,7 +181,7 @@ export default function HomeBundles() {
                           <div className="flex items-center justify-between pt-3 border-t border-gold-100/70 mt-auto">
                             <div>
                               <p className="text-base font-heading font-light text-foreground">{formatPrice(bundle.price)}</p>
-                              {bundle.compare_at_price && <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>}
+                              {bundle.compare_at_price > 0 && <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>}
                             </div>
                             <div className="flex items-center gap-1 text-[10px] font-body font-medium tracking-[0.15em] uppercase group-hover:gap-2 transition-all duration-200" style={{ color: '#c8a951' }}>Shop <ArrowRight size={10} /></div>
                           </div>
@@ -239,7 +239,7 @@ export default function HomeBundles() {
                       {bundle.description && <p className="text-[11px] font-body text-muted/80 font-light line-clamp-1 mb-2">{bundle.description}</p>}
                       <div className="flex items-center justify-between pt-2 border-t border-gold-100/70">
                         <p className="text-sm font-heading font-light text-foreground">{formatPrice(bundle.price)}</p>
-                        {bundle.compare_at_price && <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>}
+                        {bundle.compare_at_price > 0 && <p className="text-[11px] text-muted line-through font-body">{formatPrice(bundle.compare_at_price)}</p>}
                       </div>
                     </div>
                   </div>
